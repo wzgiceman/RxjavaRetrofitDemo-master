@@ -10,6 +10,11 @@ public class Subject {
     private String url;
     private String title;
 
+    @Override
+    public String toString() {
+        return "名：" + name + "\n标题:" + title;
+    }
+
     public int getId() {
         return id;
     }

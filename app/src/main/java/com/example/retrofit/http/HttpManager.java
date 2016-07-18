@@ -19,8 +19,8 @@ import rx.schedulers.Schedulers;
 public class HttpManager {
     public static final String BASE_URL = "http://www.izaodao.com/Api/";
     private static final int DEFAULT_TIMEOUT = 6;
-    private volatile static HttpManager INSTANCE;
     private HttpService httpService;
+    private volatile static HttpManager INSTANCE;
 
     //构造方法私有
     private HttpManager() {
@@ -54,16 +54,11 @@ public class HttpManager {
      * @param basePar 封装的请求数据
      */
     public void doHttpDeal(BaseEntity basePar) {
-        Observable observable = basePar.getObservable(httpService);
-//        统一结果判断处理
-        observable.map(basePar);
-//        http请求后台线程中执行
-        observable.subscribeOn(Schedulers.io());
-//        取消后及时取消后台运的线程
-        observable.unsubscribeOn(Schedulers.io());
-//        回调在主线程中执行
-        observable.observeOn(AndroidSchedulers.mainThread());
-//        回调subscribe
+        Observable observable = basePar.getObservable(httpService)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(basePar);
         observable.subscribe(basePar.getSubscirber());
     }
 }

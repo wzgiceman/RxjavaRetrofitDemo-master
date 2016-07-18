@@ -11,11 +11,17 @@
         android:id="@+id/btn_simple"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="简单的http"/>
+        android:text="rxjava+retrofit的http"/>
 
     <Button
         android:id="@+id/btn_rx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="rx简单的http"/>
+        android:text="rx+retrofit绝对封装"/>
+
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -9,14 +9,14 @@ import rx.Subscriber;
  * 测试数据
  * Created by WZG on 2016/7/16.
  */
-public class SubjectPost<T> extends BaseEntity<T> {
+public class SubjectPost extends BaseEntity {
     //    回调sub
-    private Subscriber getTopMovieOnNext;
+    private Subscriber mSubscriber;
     private boolean all;
 
 
     public SubjectPost(Subscriber getTopMovieOnNext, boolean all) {
-        this.getTopMovieOnNext = getTopMovieOnNext;
+        this.mSubscriber = getTopMovieOnNext;
         this.all = all;
     }
 
@@ -27,7 +27,7 @@ public class SubjectPost<T> extends BaseEntity<T> {
 
     @Override
     public Subscriber getSubscirber() {
-        return getTopMovieOnNext;
+        return mSubscriber;
     }
 
 }

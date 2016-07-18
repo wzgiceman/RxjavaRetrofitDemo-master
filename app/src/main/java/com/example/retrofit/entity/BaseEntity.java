@@ -27,6 +27,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
      */
     public abstract Subscriber getSubscirber();
 
+
     @Override
     public T call(BaseResultEntity<T> httpResult) {
         if (httpResult.getRet() == 0) {

@@ -21,9 +21,13 @@ import rx.Subscriber;
  * Created by WZG on 2016/7/16.
  */
 public class ProgressSubscriber<T> extends Subscriber<T> {
+    //    回调接口
     private HttpOnNextListener mSubscriberOnNextListener;
+    //    弱引用反正内存泄露
     private WeakReference<Context> mActivity;
+    //    是否能取消请求
     private boolean cancel;
+    //    加载框可自己定义
     private ProgressDialog pd;
 
     public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context) {
@@ -37,8 +41,13 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
         this.cancel = cancel;
+        initProgressDialog();
     }
 
+
+    /**
+     * 初始化加载框
+     */
     private void initProgressDialog() {
         Context context = mActivity.get();
         if (pd == null && context != null) {
@@ -110,8 +119,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         } else if (e instanceof ConnectException) {
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "错误"+e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.i("tag", "error----------->" + e.getMessage());
+            Toast.makeText(context, "错误" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.i("tag", "error----------->" + e.toString());
         }
         dismissProgressDialog();
     }
