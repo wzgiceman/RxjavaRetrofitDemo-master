@@ -7,7 +7,6 @@ package com.example.retrofit.entity;
 public class Subject {
     private int id;
     private String name;
-    private String url;
     private String title;
 
     @Override
@@ -29,14 +28,6 @@ public class Subject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getTitle() {
