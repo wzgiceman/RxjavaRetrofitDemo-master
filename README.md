@@ -6,3 +6,5 @@
         4.取消http请求
         5.预处理http请求
         5.返回数据的统一判断
+
+![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/demo.gif)
