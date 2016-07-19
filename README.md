@@ -9,16 +9,30 @@
         5.预处理http请求
         6.返回数据的统一判断
 
+##添加相关引用
+```java
+    /*rx-android-java*/
+    compile 'io.reactivex:rxjava:+'
+    compile 'com.squareup.retrofit:adapter-rxjava:+'
+    compile 'com.trello:rxlifecycle:+'
+    compile 'com.trello:rxlifecycle-components:+'
+    /*rotrofit*/
+    compile 'com.squareup.retrofit2:retrofit:+'
+    compile 'com.squareup.retrofit2:converter-gson:+'
+    compile 'com.squareup.retrofit2:adapter-rxjava:+'
+    compile 'com.google.code.gson:gson:+'
+```
+
 ##代码使用
 ```java
-   //完美封装简化版
+//    完美封装简化版
    private void simpleDo() {
        SubjectPost postEntity = new SubjectPost(new ProgressSubscriber(simpleOnNextListener, this), true);
        HttpManager manager = HttpManager.getInstance();
        manager.doHttpDeal(postEntity);
    }
 
-   //回调一一对应
+   //   回调一一对应
    HttpOnNextListener simpleOnNextListener = new HttpOnNextListener<List<Subject>>() {
        @Override
        public void onNext(List<Subject> subjects) {
