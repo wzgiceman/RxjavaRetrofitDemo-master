@@ -1,6 +1,7 @@
 package com.example.retrofit.http;
 
 import com.example.retrofit.entity.BaseEntity;
+import com.example.retrofit.exception.RetryWhenNetworkException;
 
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +56,7 @@ public class HttpManager {
      */
     public void doHttpDeal(BaseEntity basePar) {
         Observable observable = basePar.getObservable(httpService)
+                .retryWhen(new RetryWhenNetworkException())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

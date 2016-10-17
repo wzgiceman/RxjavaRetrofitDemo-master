@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.retrofit.R;
@@ -36,8 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvMsg = (TextView) findViewById(R.id.tv_msg);
-        ((Button) findViewById(R.id.btn_simple)).setOnClickListener(this);
-        ((Button) findViewById(R.id.btn_rx)).setOnClickListener(this);
+         findViewById(R.id.btn_simple).setOnClickListener(this);
+         findViewById(R.id.btn_rx).setOnClickListener(this);
     }
 
 

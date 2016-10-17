@@ -25,5 +25,4 @@ public interface HttpService {
 
     @POST("AppFiftyToneGraph/videoLink")
     Observable<BaseResultEntity<List<Subject>>> getAllVedioBys(@Body boolean once_no);
-
 }
