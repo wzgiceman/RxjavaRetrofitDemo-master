@@ -17,11 +17,11 @@ import rx.functions.Func2;
  */
 public class RetryWhenNetworkException implements Func1<Observable<? extends Throwable>, Observable<?>> {
 //    retry次数
-    private int count = 5;
+    private int count = 3;
 //    延迟
-    private long delay = 5000;
+    private long delay = 3000;
 //    叠加延迟
-    private long increaseDelay = 5000;
+    private long increaseDelay = 3000;
 
     public RetryWhenNetworkException() {
 
