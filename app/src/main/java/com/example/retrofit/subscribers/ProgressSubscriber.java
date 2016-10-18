@@ -3,7 +3,6 @@ package com.example.retrofit.subscribers;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.retrofit.listener.HttpOnNextListener;
@@ -21,34 +20,54 @@ import rx.Subscriber;
  * Created by WZG on 2016/7/16.
  */
 public class ProgressSubscriber<T> extends Subscriber<T> {
+    /*是否弹框*/
+    private boolean showPorgress=true;
     //    回调接口
     private HttpOnNextListener mSubscriberOnNextListener;
     //    弱引用反正内存泄露
     private WeakReference<Context> mActivity;
-    //    是否能取消请求
-    private boolean cancel;
     //    加载框可自己定义
     private ProgressDialog pd;
 
     public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
-        this.cancel = false;
-        initProgressDialog();
+        initProgressDialog(false);
     }
 
-    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context, boolean cancel) {
+
+    /**
+     * 初始
+     * @param mSubscriberOnNextListener
+     * @param context
+     * @param cancel 是否能cancel处理
+     */
+    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context,boolean cancel) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
-        this.cancel = cancel;
-        initProgressDialog();
+        initProgressDialog(cancel);
+    }
+
+    /**
+     * 初始化
+     * @param mSubscriberOnNextListener
+     * @param context
+     * @param showPorgress 是否需要加载框
+     * @param cancel 是否能取消加载框
+     */
+    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context,boolean showPorgress,boolean cancel) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.mActivity = new WeakReference<>(context);
+        if(showPorgress){
+            initProgressDialog(cancel);
+        }
     }
 
 
     /**
      * 初始化加载框
      */
-    private void initProgressDialog() {
+    private void initProgressDialog(boolean cancel) {
         Context context = mActivity.get();
         if (pd == null && context != null) {
             pd = new ProgressDialog(context);
@@ -69,6 +88,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      * 显示加载框
      */
     private void showProgressDialog() {
+        if(!isShowPorgress())return;
         Context context = mActivity.get();
         if (pd == null || context == null) return;
         if (!pd.isShowing()) {
@@ -81,6 +101,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      * 隐藏
      */
     private void dismissProgressDialog() {
+        if(!isShowPorgress())return;
         if (pd != null && pd.isShowing()) {
             pd.dismiss();
         }
@@ -120,7 +141,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "错误" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.i("tag", "error----------->" + e.toString());
         }
         dismissProgressDialog();
     }
@@ -144,5 +164,18 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         if (!this.isUnsubscribed()) {
             this.unsubscribe();
         }
+    }
+
+
+    public boolean isShowPorgress() {
+        return showPorgress;
+    }
+
+    /**
+     * 是否需要弹框设置
+     * @param showPorgress
+     */
+    public void setShowPorgress(boolean showPorgress) {
+        this.showPorgress = showPorgress;
     }
 }

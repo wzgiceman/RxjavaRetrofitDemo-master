@@ -108,7 +108,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     //    完美封装简化版
     private void simpleDo() {
-        SubjectPost postEntity = new SubjectPost(new ProgressSubscriber(simpleOnNextListener, this), true,this);
+        ProgressSubscriber progSub= new ProgressSubscriber(simpleOnNextListener, this,true);
+        progSub.setShowPorgress(true);
+        SubjectPost postEntity = new SubjectPost(progSub, true,this);
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(postEntity);
     }
