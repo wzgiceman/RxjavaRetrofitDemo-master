@@ -2,6 +2,7 @@ package com.example.retrofit.entity;
 
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.exception.HttpTimeException;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -12,6 +13,17 @@ import rx.functions.Func1;
  * Created by WZG on 2016/7/16.
  */
 public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
+    //    rx生命周期管理
+    private RxAppCompatActivity rxAppCompatActivity;
+
+    public RxAppCompatActivity getRxAppCompatActivity() {
+        return rxAppCompatActivity;
+    }
+
+    public void setRxAppCompatActivity(RxAppCompatActivity rxAppCompatActivity) {
+        this.rxAppCompatActivity = rxAppCompatActivity;
+    }
+
     /**
      * 设置参数
      *

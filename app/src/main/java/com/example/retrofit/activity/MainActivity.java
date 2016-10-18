@@ -2,7 +2,6 @@ package com.example.retrofit.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +13,7 @@ import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
 import com.example.retrofit.subscribers.ProgressSubscriber;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +27,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends RxAppCompatActivity implements View.OnClickListener {
     private TextView tvMsg;
 
     @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //    完美封装简化版
     private void simpleDo() {
-        SubjectPost postEntity = new SubjectPost(new ProgressSubscriber(simpleOnNextListener, this), true);
+        SubjectPost postEntity = new SubjectPost(new ProgressSubscriber(simpleOnNextListener, this), true,this);
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(postEntity);
     }

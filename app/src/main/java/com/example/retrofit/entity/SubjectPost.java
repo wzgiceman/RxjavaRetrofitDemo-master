@@ -1,6 +1,7 @@
 package com.example.retrofit.entity;
 
 import com.example.retrofit.http.HttpService;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -12,13 +13,16 @@ import rx.Subscriber;
 public class SubjectPost extends BaseEntity {
     //    回调sub
     private Subscriber mSubscriber;
+//    接口需要传入的参数 可自定义不同类型
     private boolean all;
 
 
-    public SubjectPost(Subscriber getTopMovieOnNext, boolean all) {
+    public SubjectPost(Subscriber getTopMovieOnNext, boolean all, RxAppCompatActivity rxAppCompatActivity) {
         this.mSubscriber = getTopMovieOnNext;
         this.all = all;
+        setRxAppCompatActivity(rxAppCompatActivity);
     }
+
 
     @Override
     public Observable getObservable(HttpService methods) {
