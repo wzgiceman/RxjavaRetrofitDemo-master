@@ -58,6 +58,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context,boolean showPorgress,boolean cancel) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
+        setShowPorgress(showPorgress);
         if(showPorgress){
             initProgressDialog(cancel);
         }
