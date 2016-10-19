@@ -58,5 +58,9 @@
 * 结果统一通过BaseEntity中的fun1方法判断，最后返回传递的sub对象中
 
 
+##优化迭代
+根据反馈及时更新和优化的过程，如果在使用过程中有任何问题，欢迎反馈给我！
+![](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/git_history.png)
+
 ##思路
 详细思路可以可以参看我的博客：[Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/wzgiceman/article/details/51939574)
