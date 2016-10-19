@@ -27,20 +27,29 @@
 
 ##代码使用
 ```java
-//    完美封装简化版
-   private void simpleDo() {
-       SubjectPost postEntity = new SubjectPost(new ProgressSubscriber(simpleOnNextListener, this), true);
-       HttpManager manager = HttpManager.getInstance();
-       manager.doHttpDeal(postEntity);
-   }
+    //    完美封装简化版
+    private void simpleDo() {
+        ProgressSubscriber progSub= new ProgressSubscriber(simpleOnNextListener, this,true);
+        progSub.setShowPorgress(true);
+        SubjectPost postEntity = new SubjectPost(progSub, true,this);
+        HttpManager manager = HttpManager.getInstance();
+        manager.doHttpDeal(postEntity);
+    }
 
-   //   回调一一对应
-   HttpOnNextListener simpleOnNextListener = new HttpOnNextListener<List<Subject>>() {
-       @Override
-       public void onNext(List<Subject> subjects) {
-           tvMsg.setText("已封装：\n" + subjects.toString());
-       }
-   };
+    //   回调一一对应
+    HttpOnNextListener simpleOnNextListener = new HttpOnNextListener<List<Subject>>() {
+        @Override
+        public void onNext(List<Subject> subjects) {
+            tvMsg.setText("已封装：\n" + subjects.toString());
+        }
+
+        /*用户主动调用，默认是不需要覆写该方法*/
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            tvMsg.setText("失败：\n" + e.toString());
+        }
+    }
 ```
 
 

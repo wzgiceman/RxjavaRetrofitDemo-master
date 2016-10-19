@@ -121,6 +121,13 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         public void onNext(List<Subject> subjects) {
             tvMsg.setText("已封装：\n" + subjects.toString());
         }
+
+        /*用户主动调用，默认是不需要覆写该方法*/
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            tvMsg.setText("失败：\n" + e.toString());
+        }
     };
 
 }
