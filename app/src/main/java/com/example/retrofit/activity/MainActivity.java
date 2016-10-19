@@ -12,7 +12,6 @@ import com.example.retrofit.entity.SubjectPost;
 import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
-import com.example.retrofit.subscribers.ProgressSubscriber;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.List;
@@ -108,9 +107,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     //    完美封装简化版
     private void simpleDo() {
-        ProgressSubscriber progSub= new ProgressSubscriber(simpleOnNextListener, this,true);
-        progSub.setShowPorgress(true);
-        SubjectPost postEntity = new SubjectPost(progSub, true,this);
+        SubjectPost postEntity = new SubjectPost(simpleOnNextListener,this);
+        postEntity.setAll(true);
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(postEntity);
     }

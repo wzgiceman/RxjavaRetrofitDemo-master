@@ -1,7 +1,9 @@
 package com.example.retrofit.entity;
 
-import com.example.retrofit.http.HttpService;
 import com.example.retrofit.exception.HttpTimeException;
+import com.example.retrofit.http.HttpService;
+import com.example.retrofit.listener.HttpOnNextListener;
+import com.example.retrofit.subscribers.ProgressSubscriber;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import rx.Observable;
@@ -15,13 +17,26 @@ import rx.functions.Func1;
 public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     //    rx生命周期管理
     private RxAppCompatActivity rxAppCompatActivity;
+    /*sub预处理类*/
+    protected ProgressSubscriber progressSubscriber;
 
-    public RxAppCompatActivity getRxAppCompatActivity() {
-        return rxAppCompatActivity;
+    public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+        progressSubscriber=new ProgressSubscriber(listener,rxAppCompatActivity);
+        this.rxAppCompatActivity=rxAppCompatActivity;
     }
 
-    public void setRxAppCompatActivity(RxAppCompatActivity rxAppCompatActivity) {
-        this.rxAppCompatActivity = rxAppCompatActivity;
+    public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity,boolean cancel) {
+        progressSubscriber=new ProgressSubscriber(listener,rxAppCompatActivity,cancel);
+        this.rxAppCompatActivity=rxAppCompatActivity;
+    }
+
+
+    /**
+     * 获取当前rx生命周期
+     * @return
+     */
+    public RxAppCompatActivity getRxAppCompatActivity() {
+        return rxAppCompatActivity;
     }
 
     /**
@@ -37,7 +52,9 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
      *
      * @return
      */
-    public abstract Subscriber getSubscirber();
+    public Subscriber getSubscirber(){
+        return  progressSubscriber;
+    }
 
 
     @Override
