@@ -29,11 +29,10 @@
 ```java
     //    完美封装简化版
     private void simpleDo() {
-        ProgressSubscriber progSub= new ProgressSubscriber(simpleOnNextListener, this,true);
-        progSub.setShowPorgress(true);
-        SubjectPost postEntity = new SubjectPost(progSub, true,this);
-        HttpManager manager = HttpManager.getInstance();
-        manager.doHttpDeal(postEntity);
+          SubjectPost postEntity = new SubjectPost(simpleOnNextListener,this);
+          postEntity.setAll(true);
+          HttpManager manager = HttpManager.getInstance();
+          manager.doHttpDeal(postEntity);
     }
 
     //   回调一一对应
