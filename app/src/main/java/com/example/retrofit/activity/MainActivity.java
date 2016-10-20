@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
 import com.example.retrofit.entity.BaseDownEntity;
@@ -14,18 +16,25 @@ import com.example.retrofit.entity.DownApkApi;
 import com.example.retrofit.entity.RetrofitEntity;
 import com.example.retrofit.entity.Subject;
 import com.example.retrofit.entity.SubjectPostApi;
+import com.example.retrofit.entity.UplaodApi;
+import com.example.retrofit.entity.UploadResulte;
 import com.example.retrofit.http.HttpDownManager;
 import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
+import com.example.retrofit.listener.upload.ProgressRequestBody;
+import com.example.retrofit.listener.upload.UploadProgressListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -37,6 +46,7 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener {
     private TextView tvMsg;
     private NumberProgressBar progressBar;
+    private ImageView img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +56,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn_simple).setOnClickListener(this);
         findViewById(R.id.btn_rx).setOnClickListener(this);
         findViewById(R.id.btn_rx_down).setOnClickListener(this);
+        findViewById(R.id.btn_rx_uploade).setOnClickListener(this);
+        img=(ImageView)findViewById(R.id.img);
         progressBar=(NumberProgressBar)findViewById(R.id.number_progress_bar);
     }
 
@@ -61,6 +73,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_rx_down:
                 downApk();
+                break;
+            case R.id.btn_rx_uploade:
+                uploadeDo();
                 break;
         }
     }
@@ -117,6 +132,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
                 );
     }
+
+    /*************************************************一般请求*******************************************************/
 
 
     //    完美封装简化版
@@ -194,4 +211,43 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
     };
 
+
+    /*********************************************文件上传***************************************************/
+
+  private void uploadeDo(){
+      File file=new File("/storage/emulated/0/Download/11.jpg");
+      RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),file);
+      MultipartBody.Part part= MultipartBody.Part.createFormData("file_name", file.getName(), new ProgressRequestBody(requestBody,
+              new UploadProgressListener() {
+          @Override
+          public void onProgress(long currentBytesCount, long totalBytesCount) {
+              tvMsg.setText("提示:上传中");
+              progressBar.setMax((int) totalBytesCount);
+              progressBar.setProgress((int) currentBytesCount);
+          }
+      }));
+      UplaodApi uplaodApi = new UplaodApi(httpOnNextListener,this);
+      uplaodApi.setPart(part);
+      HttpManager manager = HttpManager.getInstance();
+      manager.doHttpDeal(uplaodApi);
+  }
+
+
+    /**
+     * 上传回调
+     */
+    HttpOnNextListener httpOnNextListener=new HttpOnNextListener<UploadResulte>() {
+        @Override
+        public void onNext(UploadResulte o) {
+            tvMsg.setText("成功");
+            Glide.with(MainActivity.this).load(o.getHeadImgUrl()).skipMemoryCache(true).into(img);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            super.onError(e);
+            tvMsg.setText("失败："+e.toString());
+        }
+
+    };
 }

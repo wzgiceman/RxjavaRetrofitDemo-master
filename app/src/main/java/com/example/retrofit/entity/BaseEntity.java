@@ -20,6 +20,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     /*sub预处理类*/
     protected ProgressSubscriber progressSubscriber;
 
+
     public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         progressSubscriber=new ProgressSubscriber(listener,rxAppCompatActivity);
         this.rxAppCompatActivity=rxAppCompatActivity;

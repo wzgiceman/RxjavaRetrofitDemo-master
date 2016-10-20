@@ -26,6 +26,12 @@
         android:layout_height="wrap_content"
         android:text="rx+retrofit下載"/>
 
+    <Button
+        android:id="@+id/btn_rx_uploade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="rx+retrofit上传"/>
+
 
     <com.daimajia.numberprogressbar.NumberProgressBar
         android:id="@+id/number_progress_bar"
@@ -41,5 +47,10 @@
         android:id="@+id/tv_msg"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>
