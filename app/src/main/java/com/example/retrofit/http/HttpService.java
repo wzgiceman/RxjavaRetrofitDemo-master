@@ -6,9 +6,13 @@ import com.example.retrofit.entity.Subject;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -25,4 +29,9 @@ public interface HttpService {
 
     @POST("AppFiftyToneGraph/videoLink")
     Observable<BaseResultEntity<List<Subject>>> getAllVedioBys(@Body boolean once_no);
+
+    /*下载接口*/
+    @Streaming/*大文件需要加入这个判断，防止下载过程中写入到内存中*/
+    @GET
+    Observable<ResponseBody> downloadApk(@Url String url);
 }

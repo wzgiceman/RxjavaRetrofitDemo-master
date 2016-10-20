@@ -31,8 +31,8 @@ android {
 dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'io.reactivex:rxandroid:1.1.0'
+
+    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
 
     /*rx-android-java*/
     compile 'io.reactivex:rxjava:+'
