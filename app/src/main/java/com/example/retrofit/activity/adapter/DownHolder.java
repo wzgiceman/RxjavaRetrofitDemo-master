@@ -1,6 +1,5 @@
 package com.example.retrofit.activity.adapter;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -78,7 +77,6 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
         @Override
         public void onPuase() {
             super.onPuase();
-            Log.e("tag","---->暂停了");
             tvMsg.setText("提示:暂停");
         }
 

@@ -5,6 +5,7 @@ import com.example.retrofit.downlaod.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -17,15 +18,15 @@ import rx.functions.Action1;
  * Created by WZG on 2016/7/16.
  */
 public class ProgressDownSubscriber<T> extends Subscriber<T> implements DownloadProgressListener {
-    //    弱引用结果回调
+    //弱引用结果回调
     private WeakReference<HttpProgressOnNextListener> mSubscriberOnNextListener;
-    /*数据*/
-    private DownInfo baseDownEntity;
+    /*下载数据*/
+    private DownInfo downInfo;
 
 
-    public ProgressDownSubscriber(DownInfo baseDownEntity) {
-        this.mSubscriberOnNextListener = new WeakReference<>(baseDownEntity.getListener());
-        setBaseDownEntity(baseDownEntity);
+    public ProgressDownSubscriber(DownInfo downInfo) {
+        this.mSubscriberOnNextListener = new WeakReference<>(downInfo.getListener());
+        setBaseDownEntity(downInfo);
     }
 
     /**
@@ -37,7 +38,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onStart();
         }
-        baseDownEntity.setState(DownState.START);
+        downInfo.setState(DownState.START);
     }
 
     /**
@@ -48,7 +49,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onComplete();
         }
-        baseDownEntity.setState(DownState.FINISH);
+        downInfo.setState(DownState.FINISH);
     }
 
     /**
@@ -63,8 +64,8 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
             mSubscriberOnNextListener.get().onError(e);
         }
         /*停止下载*/
-        HttpDownManager.getInstance().stopDown(baseDownEntity);
-        baseDownEntity.setState(DownState.ERROR);
+        HttpDownManager.getInstance().stopDown(downInfo);
+        downInfo.setState(DownState.ERROR);
     }
 
     /**
@@ -81,36 +82,30 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
 
     @Override
     public void update(long read, long count, boolean done) {
-        baseDownEntity.setState(DownState.DOWN);
-        if(baseDownEntity.getCountLength()>count){
-            read=baseDownEntity.getCountLength()-count+read;
+        if(downInfo.getCountLength()>count){
+            read=downInfo.getCountLength()-count+read;
         }else{
-            baseDownEntity.setCountLength(count);
+            downInfo.setCountLength(count);
         }
-        baseDownEntity.setReadLength(read);
+        downInfo.setReadLength(read);
         if (mSubscriberOnNextListener.get() != null) {
-            rx.Observable.just(read).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
+            /*1秒接受一次消息，造成UI阻塞，如果不需要显示进度可去掉实现逻辑，减少压力*/
+            rx.Observable.just(read).debounce(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<Long>() {
                 @Override
                 public void call(Long aLong) {
-                    mSubscriberOnNextListener.get().updateProgress(aLong,baseDownEntity.getCountLength());
+                      /*如果暂停或者停止状态延迟，不需要继续发送回调，影响显示*/
+                    if(downInfo.getState()==DownState.PAUSE||downInfo.getState()==DownState.STOP)return;
+                    downInfo.setState(DownState.DOWN);
+                    mSubscriberOnNextListener.get().updateProgress(aLong,downInfo.getCountLength());
                 }
             });
         }
     }
 
-    public DownInfo getBaseDownEntity() {
-        return baseDownEntity;
-    }
 
-    public void setBaseDownEntity(DownInfo baseDownEntity) {
-        this.baseDownEntity = baseDownEntity;
-    }
-
-    public WeakReference<HttpProgressOnNextListener> getmSubscriberOnNextListener() {
-        return mSubscriberOnNextListener;
-    }
-
-    public void setmSubscriberOnNextListener(WeakReference<HttpProgressOnNextListener> mSubscriberOnNextListener) {
-        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+    public void setBaseDownEntity(DownInfo downInfo) {
+        this.downInfo = downInfo;
     }
 }

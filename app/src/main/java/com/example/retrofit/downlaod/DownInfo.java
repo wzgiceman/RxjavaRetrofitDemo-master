@@ -23,10 +23,8 @@ public class DownInfo {
     private HttpService service;
     /*回调监听*/
     private HttpProgressOnNextListener listener;
-    /*回调处理类*/
-    private ProgressDownSubscriber subscriber;
     /*超时设置*/
-    private  int DEFAULT_TIMEOUT = 2;
+    private  int DEFAULT_TIMEOUT = 6;
     /*下载状态*/
     private DownState state;
 
@@ -56,14 +54,6 @@ public class DownInfo {
 
     public void setConnectionTime(int DEFAULT_TIMEOUT) {
         this.DEFAULT_TIMEOUT = DEFAULT_TIMEOUT;
-    }
-
-    public ProgressDownSubscriber getSubscriber() {
-        return subscriber;
-    }
-
-    public void setSubscriber(ProgressDownSubscriber subscriber) {
-        this.subscriber = subscriber;
     }
 
     public HttpProgressOnNextListener getListener() {

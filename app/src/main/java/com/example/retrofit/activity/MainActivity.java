@@ -182,7 +182,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     private void downApk(){
         HttpDownManager manager=HttpDownManager.getInstance();
         if(apkApi==null){
-//            String apkUrl="http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4";
             String apkUrl="http://www.izaodao.com/app/izaodao_app.apk";
             File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test3" +
                     ".apk");

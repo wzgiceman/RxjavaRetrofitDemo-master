@@ -1,19 +1,19 @@
 package com.example.retrofit.downlaod;
 
+import com.example.retrofit.downlaod.DownLoadListener.DownloadInterceptor;
 import com.example.retrofit.exception.HttpTimeException;
 import com.example.retrofit.exception.RetryWhenNetworkException;
 import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
-import com.example.retrofit.downlaod.DownLoadListener.DownloadInterceptor;
-import com.example.retrofit.listener.HttpProgressOnNextListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -31,12 +31,15 @@ import rx.schedulers.Schedulers;
  */
 public class HttpDownManager {
     /*记录下载数据*/
-    private List<DownInfo> downInfos;
+    private Set<DownInfo> downInfos;
+    /*回调sub队列*/
+    private HashMap<String,ProgressDownSubscriber> subMap;
     /*单利对象*/
     private volatile static HttpDownManager INSTANCE;
 
     private HttpDownManager(){
-        downInfos=new ArrayList<>();
+        downInfos=new HashSet<>();
+        subMap=new HashMap<>();
     }
 
     /**
@@ -60,12 +63,13 @@ public class HttpDownManager {
      */
     public void startDown(DownInfo info){
         /*正在下载不处理*/
-        if(info==null||info.getSubscriber()!=null){
+        if(info==null||subMap.get(info.getUrl())!=null){
             return;
         }
         /*添加回调处理类*/
         ProgressDownSubscriber subscriber=new ProgressDownSubscriber(info);
-        info.setSubscriber(subscriber);
+        /*记录回调sub*/
+        subMap.put(info.getUrl(),subscriber);
         /*获取service，多次请求公用一个sercie*/
         HttpService httpService;
         if(downInfos.contains(info)){
@@ -120,13 +124,11 @@ public class HttpDownManager {
     public void stopDown(DownInfo info){
         if(info==null)return;
         info.setState(DownState.STOP);
-        ProgressDownSubscriber subscriber=info.getSubscriber();
-        if(subscriber==null)return;
-        subscriber.unsubscribe();
-        info.setSubscriber(null);
-        HttpProgressOnNextListener listener=info.getListener();
-        if(listener!=null){
-            listener.onStop();
+        info.getListener().onStop();
+        if(subMap.containsKey(info.getUrl())) {
+            ProgressDownSubscriber subscriber=subMap.get(info.getUrl());
+            subscriber.unsubscribe();
+            subMap.remove(info.getUrl());
         }
         /*删除数据库信息和本地文件*/
     }
@@ -139,13 +141,11 @@ public class HttpDownManager {
     public void pause(DownInfo info){
         if(info==null)return;
         info.setState(DownState.PAUSE);
-        ProgressDownSubscriber subscriber=info.getSubscriber();
-        if(subscriber==null)return;
-        subscriber.unsubscribe();
-        info.setSubscriber(null);
-        HttpProgressOnNextListener listener=info.getListener();
-        if(listener!=null){
-            listener.onPuase();
+        info.getListener().onPuase();
+        if(subMap.containsKey(info.getUrl())){
+            ProgressDownSubscriber subscriber=subMap.get(info.getUrl());
+            subscriber.unsubscribe();
+            subMap.remove(info.getUrl());
         }
         /*这里需要讲info信息写入到数据中，可自由扩展，用自己项目的数据库*/
     }
@@ -157,6 +157,8 @@ public class HttpDownManager {
         for (DownInfo downInfo : downInfos) {
             stopDown(downInfo);
         }
+        subMap.clear();
+        downInfos.clear();
     }
 
     /**
@@ -166,7 +168,19 @@ public class HttpDownManager {
         for (DownInfo downInfo : downInfos) {
             pause(downInfo);
         }
+        subMap.clear();
+        downInfos.clear();
     }
+
+
+    /**
+     * 返回全部正在下载的数据
+     * @return
+     */
+    public Set<DownInfo> getDownInfos() {
+        return downInfos;
+    }
+
 
     /**
      * 写入文件
