@@ -5,7 +5,6 @@ import com.example.retrofit.downlaod.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 
 import java.lang.ref.WeakReference;
-import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -26,7 +25,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
 
     public ProgressDownSubscriber(DownInfo downInfo) {
         this.mSubscriberOnNextListener = new WeakReference<>(downInfo.getListener());
-        setBaseDownEntity(downInfo);
+        this.downInfo=downInfo;
     }
 
     /**
@@ -60,11 +59,11 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
      */
     @Override
     public void onError(Throwable e) {
+        /*停止下载*/
+        HttpDownManager.getInstance().stopDown(downInfo);
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onError(e);
         }
-        /*停止下载*/
-        HttpDownManager.getInstance().stopDown(downInfo);
         downInfo.setState(DownState.ERROR);
     }
 
@@ -89,9 +88,8 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         }
         downInfo.setReadLength(read);
         if (mSubscriberOnNextListener.get() != null) {
-            /*1秒接受一次消息，造成UI阻塞，如果不需要显示进度可去掉实现逻辑，减少压力*/
-            rx.Observable.just(read).debounce(1, TimeUnit.SECONDS)
-                    .observeOn(AndroidSchedulers.mainThread())
+            /*接受进度消息，造成UI阻塞，如果不需要显示进度可去掉实现逻辑，减少压力*/
+            rx.Observable.just(read).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Long>() {
                 @Override
                 public void call(Long aLong) {
@@ -104,8 +102,4 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         }
     }
 
-
-    public void setBaseDownEntity(DownInfo downInfo) {
-        this.downInfo = downInfo;
-    }
 }

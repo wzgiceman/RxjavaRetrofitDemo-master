@@ -1,7 +1,6 @@
 package com.example.retrofit.downlaod.DownLoadListener;
 
 import java.io.IOException;
-
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import okio.Buffer;
@@ -20,8 +19,7 @@ public class DownloadResponseBody extends ResponseBody {
     private DownloadProgressListener progressListener;
     private BufferedSource bufferedSource;
 
-    public DownloadResponseBody(ResponseBody responseBody,
-                                DownloadProgressListener progressListener) {
+    public DownloadResponseBody(ResponseBody responseBody, DownloadProgressListener progressListener) {
         this.responseBody = responseBody;
         this.progressListener = progressListener;
     }
@@ -53,7 +51,6 @@ public class DownloadResponseBody extends ResponseBody {
                 long bytesRead = super.read(sink, byteCount);
                 // read() returns the number of bytes read, or -1 if this source is exhausted.
                 totalBytesRead += bytesRead != -1 ? bytesRead : 0;
-
                 if (null != progressListener) {
                     progressListener.update(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
                 }
