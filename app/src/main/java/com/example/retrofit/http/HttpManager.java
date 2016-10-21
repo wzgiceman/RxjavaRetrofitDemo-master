@@ -2,6 +2,7 @@ package com.example.retrofit.http;
 
 import com.example.retrofit.entity.BaseEntity;
 import com.example.retrofit.exception.RetryWhenNetworkException;
+import com.example.retrofit.subscribers.ProgressSubscriber;
 
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +58,10 @@ public class HttpManager {
      * @param basePar 封装的请求数据
      */
     public void doHttpDeal(BaseEntity basePar) {
+        ProgressSubscriber subscriber=new ProgressSubscriber(basePar.getListener()
+                ,basePar.getRxAppCompatActivity()
+                ,basePar.isShowProgress()
+                , basePar.isCancel());
         Observable observable = basePar.getObservable(httpService)
                 /*失败后的retry配置*/
                 .retryWhen(new RetryWhenNetworkException())
@@ -70,6 +75,6 @@ public class HttpManager {
                 /*结果判断*/
                 .map(basePar);
         /*数据回调*/
-        observable.subscribe(basePar.getSubscirber());
+        observable.subscribe(subscriber);
     }
 }

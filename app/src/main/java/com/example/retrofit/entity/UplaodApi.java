@@ -21,7 +21,7 @@ public class UplaodApi extends BaseEntity {
 
     public UplaodApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        progressSubscriber.setShowPorgress(false);
+        setShowProgress(true);
     }
 
     public MultipartBody.Part getPart() {
@@ -35,7 +35,7 @@ public class UplaodApi extends BaseEntity {
     @Override
     public Observable getObservable(HttpService methods) {
         RequestBody uid= RequestBody.create(MediaType.parse("text/plain"), "4811420");
-        RequestBody key = RequestBody.create(MediaType.parse("text/plain"), "3698e441ae4efa01d039e378097a9bea");
+        RequestBody key = RequestBody.create(MediaType.parse("text/plain"), "cfed6cc8caad0d79ea56d917376dc4df");
         return methods.uploadImage(uid,key,getPart());
     }
 

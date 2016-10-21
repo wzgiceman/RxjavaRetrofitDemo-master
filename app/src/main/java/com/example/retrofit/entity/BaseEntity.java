@@ -3,11 +3,9 @@ package com.example.retrofit.entity;
 import com.example.retrofit.exception.HttpTimeException;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
-import com.example.retrofit.subscribers.ProgressSubscriber;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func1;
 
 /**
@@ -17,27 +15,18 @@ import rx.functions.Func1;
 public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     //    rx生命周期管理
     private RxAppCompatActivity rxAppCompatActivity;
-    /*sub预处理类*/
-    protected ProgressSubscriber progressSubscriber;
+    /*回调*/
+    private HttpOnNextListener listener;
+    /*是否能取消加载框*/
+    private boolean cancel;
+    /*是否显示加载框*/
+    private boolean showProgress;
 
 
     public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
-        progressSubscriber=new ProgressSubscriber(listener,rxAppCompatActivity);
-        this.rxAppCompatActivity=rxAppCompatActivity;
-    }
-
-    public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity,boolean cancel) {
-        progressSubscriber=new ProgressSubscriber(listener,rxAppCompatActivity,cancel);
-        this.rxAppCompatActivity=rxAppCompatActivity;
-    }
-
-
-    /**
-     * 获取当前rx生命周期
-     * @return
-     */
-    public RxAppCompatActivity getRxAppCompatActivity() {
-        return rxAppCompatActivity;
+        setListener(listener);
+        setRxAppCompatActivity(rxAppCompatActivity);
+        setShowProgress(true);
     }
 
     /**
@@ -48,13 +37,40 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
      */
     public abstract Observable getObservable(HttpService methods);
 
-    /**
-     * 设置回调sub
-     *
+    public void setRxAppCompatActivity(RxAppCompatActivity rxAppCompatActivity) {
+        this.rxAppCompatActivity = rxAppCompatActivity;
+    }
+
+    public boolean isShowProgress() {
+        return showProgress;
+    }
+
+    public void setShowProgress(boolean showProgress) {
+        this.showProgress = showProgress;
+    }
+
+    public boolean isCancel() {
+         return cancel;
+     }
+
+     public void setCancel(boolean cancel) {
+         this.cancel = cancel;
+     }
+
+     public HttpOnNextListener getListener() {
+         return listener;
+     }
+
+     public void setListener(HttpOnNextListener listener) {
+         this.listener = listener;
+     }
+
+    /*
+     * 获取当前rx生命周期
      * @return
      */
-    public Subscriber getSubscirber(){
-        return  progressSubscriber;
+    public RxAppCompatActivity getRxAppCompatActivity() {
+        return rxAppCompatActivity;
     }
 
 

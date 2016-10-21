@@ -27,9 +27,9 @@ public class SubjectPostApi extends BaseEntity {
      * @param rxAppCompatActivity
      */
     public SubjectPostApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
-        super(listener,rxAppCompatActivity,true);
-        /*显示设置*/
-        progressSubscriber.setShowPorgress(true);
+        super(listener,rxAppCompatActivity);
+        setShowProgress(true);
+        setCancel(true);
     }
 
 

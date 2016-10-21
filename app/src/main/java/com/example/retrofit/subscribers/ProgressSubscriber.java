@@ -29,25 +29,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     //    加载框可自己定义
     private ProgressDialog pd;
 
-    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context) {
-        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
-        this.mActivity = new WeakReference<>(context);
-        initProgressDialog(false);
-    }
-
-
-    /**
-     * 初始
-     * @param mSubscriberOnNextListener
-     * @param context
-     * @param cancel 是否能cancel处理
-     */
-    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context,boolean cancel) {
-        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
-        this.mActivity = new WeakReference<>(context);
-        initProgressDialog(cancel);
-    }
-
     /**
      * 初始化
      * @param mSubscriberOnNextListener
