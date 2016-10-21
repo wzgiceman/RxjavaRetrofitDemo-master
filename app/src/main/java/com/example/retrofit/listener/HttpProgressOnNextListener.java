@@ -22,6 +22,7 @@ public abstract class HttpProgressOnNextListener<T> {
     public abstract void onComplete();
 
 
+
     /**
      * 下载进度
      * @param readLength
@@ -37,4 +38,18 @@ public abstract class HttpProgressOnNextListener<T> {
      public  void onError(Throwable e){
 
      }
+
+    /**
+     * 暂停下载
+     */
+    public void onPuase(){
+
+    }
+
+    /**
+     * 停止下载销毁
+     */
+    public void onStop(){
+
+    }
 }

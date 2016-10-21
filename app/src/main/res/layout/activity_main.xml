@@ -21,10 +21,30 @@
 
 
     <Button
-        android:id="@+id/btn_rx_down"
+        android:id="@+id/btn_rx_mu_down"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="rx+retrofit下載"/>
+        android:text="多任务断点续传下载"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btn_rx_down"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="rx+retrofit下载"/>
+        <Button
+            android:id="@+id/btn_rx_pause"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:text="rx+retrofit暂停"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_rx_uploade"

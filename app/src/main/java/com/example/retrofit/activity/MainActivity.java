@@ -1,6 +1,7 @@
 package com.example.retrofit.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -11,8 +12,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
-import com.example.retrofit.entity.BaseDownEntity;
-import com.example.retrofit.entity.DownApkApi;
+import com.example.retrofit.entity.DownInfo;
 import com.example.retrofit.entity.RetrofitEntity;
 import com.example.retrofit.entity.Subject;
 import com.example.retrofit.entity.SubjectPostApi;
@@ -57,6 +57,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn_rx).setOnClickListener(this);
         findViewById(R.id.btn_rx_down).setOnClickListener(this);
         findViewById(R.id.btn_rx_uploade).setOnClickListener(this);
+        findViewById(R.id.btn_rx_mu_down).setOnClickListener(this);
+        findViewById(R.id.btn_rx_pause).setOnClickListener(this);
         img=(ImageView)findViewById(R.id.img);
         progressBar=(NumberProgressBar)findViewById(R.id.number_progress_bar);
     }
@@ -76,6 +78,13 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_rx_uploade:
                 uploadeDo();
+                break;
+            case R.id.btn_rx_pause:
+                pause();
+                break;
+            case  R.id.btn_rx_mu_down:
+                Intent intent=new Intent(this,DownLaodActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -168,22 +177,32 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
 
     /******************************************* 下載 **********************************************/
-
+    DownInfo apkApi;
     /*下载处理 6.0以后的手机需要加入权限判断*/
     private void downApk(){
-        File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "file.apk");
-        String apkUrl="http://www.izaodao.com/app/izaodao_app.apk";
-        DownApkApi apkApi=new DownApkApi(apkUrl,httpProgressOnNextListener);
-        apkApi.setSavePath(outputFile.getAbsolutePath());
-        HttpDownManager manager=new HttpDownManager();
-        manager.downDeal(apkApi);
+        HttpDownManager manager=HttpDownManager.getInstance();
+        if(apkApi==null){
+//            String apkUrl="http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4";
+            String apkUrl="http://www.izaodao.com/app/izaodao_app.apk";
+            File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test3" +
+                    ".apk");
+            apkApi=new DownInfo(apkUrl,httpProgressOnNextListener);
+            apkApi.setSavePath(outputFile.getAbsolutePath());
+        }
+        manager.startDown(apkApi);
     }
 
+    /*暂停下载*/
+    private void pause(){
+        if(apkApi!=null){
+            HttpDownManager.getInstance().pause(apkApi);
+        }
+    }
 
     /*下载回调*/
-    HttpProgressOnNextListener<BaseDownEntity> httpProgressOnNextListener=new HttpProgressOnNextListener<BaseDownEntity>() {
+    HttpProgressOnNextListener<DownInfo> httpProgressOnNextListener=new HttpProgressOnNextListener<DownInfo>() {
         @Override
-        public void onNext(BaseDownEntity baseDownEntity) {
+        public void onNext(DownInfo baseDownEntity) {
             Toast.makeText(MainActivity.this,baseDownEntity.getSavePath(),Toast.LENGTH_SHORT).show();
         }
 
@@ -201,6 +220,18 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         public void onError(Throwable e) {
             super.onError(e);
             tvMsg.setText("失败:"+e.toString());
+        }
+
+
+        @Override
+        public void onPuase() {
+            super.onPuase();
+            tvMsg.setText("提示:暂停");
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
         }
 
         @Override

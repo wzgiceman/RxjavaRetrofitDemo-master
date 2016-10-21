@@ -1,6 +1,8 @@
 package com.example.retrofit.subscribers;
 
 
+import com.example.retrofit.entity.DownInfo;
+import com.example.retrofit.http.HttpDownManager;
 import com.example.retrofit.listener.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 
@@ -19,9 +21,13 @@ import rx.functions.Action1;
 public class ProgressDownSubscriber<T> extends Subscriber<T> implements DownloadProgressListener {
     //    弱引用结果回调
     private WeakReference<HttpProgressOnNextListener> mSubscriberOnNextListener;
+    /*数据*/
+    private DownInfo baseDownEntity;
 
-    public ProgressDownSubscriber(HttpProgressOnNextListener mSubscriberOnNextListener) {
-        this.mSubscriberOnNextListener = new WeakReference<>(mSubscriberOnNextListener);
+
+    public ProgressDownSubscriber(DownInfo baseDownEntity) {
+        this.mSubscriberOnNextListener = new WeakReference<>(baseDownEntity.getListener());
+        setBaseDownEntity(baseDownEntity);
     }
 
     /**
@@ -56,6 +62,8 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onError(e);
         }
+        /*停止下载*/
+        HttpDownManager.getInstance().stopDown(baseDownEntity);
     }
 
     /**
@@ -72,13 +80,35 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
 
     @Override
     public void update(long read, long count, boolean done) {
+        if(baseDownEntity.getCountLength()>count){
+            read=baseDownEntity.getCountLength()-count+read;
+        }else{
+            baseDownEntity.setCountLength(count);
+        }
+        baseDownEntity.setReadLength(read);
         if (mSubscriberOnNextListener.get() != null) {
             rx.Observable.just(read).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
                 @Override
                 public void call(Long aLong) {
-                    mSubscriberOnNextListener.get().updateProgress(aLong,count);
+                    mSubscriberOnNextListener.get().updateProgress(aLong,baseDownEntity.getCountLength());
                 }
             });
         }
+    }
+
+    public DownInfo getBaseDownEntity() {
+        return baseDownEntity;
+    }
+
+    public void setBaseDownEntity(DownInfo baseDownEntity) {
+        this.baseDownEntity = baseDownEntity;
+    }
+
+    public WeakReference<HttpProgressOnNextListener> getmSubscriberOnNextListener() {
+        return mSubscriberOnNextListener;
+    }
+
+    public void setmSubscriberOnNextListener(WeakReference<HttpProgressOnNextListener> mSubscriberOnNextListener) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
     }
 }

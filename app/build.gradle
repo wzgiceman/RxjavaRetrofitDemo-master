@@ -34,6 +34,8 @@ dependencies {
 
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.jude:easyrecyclerview:+'
+    compile 'com.android.support:recyclerview-v7:+'
 
     /*rx-android-java*/
     compile 'io.reactivex:rxjava:+'

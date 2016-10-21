@@ -13,6 +13,7 @@ import okhttp3.ResponseBody;
 import retrofit.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -35,10 +36,10 @@ public interface HttpService {
     @POST("AppFiftyToneGraph/videoLink")
     Observable<BaseResultEntity<List<Subject>>> getAllVedioBys(@Body boolean once_no);
 
-    /*下载接口*/
+    /*断点续传下载接口*/
     @Streaming/*大文件需要加入这个判断，防止下载过程中写入到内存中*/
     @GET
-    Observable<ResponseBody> downloadApk(@Url String url);
+    Observable<ResponseBody> download(@Header("RANGE") String start, @Url String url);
 
     /*上传文件*/
     @Multipart

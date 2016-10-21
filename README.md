@@ -3,6 +3,7 @@
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/http.gif)
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/down.gif)
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/upload.gif)
+![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/mu_down.gif)
 
         1.Retrofit+Rxjava+okhttp基本使用方法
         2.统一处理请求数据格式
@@ -12,7 +13,7 @@
         6.返回数据的统一判断
         7.失败后的retry处理
         8.RxLifecycle管理生命周期，防止泄露
-        9.文件上传下载
+        9.文件上传下载(支持多文件，断点续传)
 
 ##添加相关引用
 ```java

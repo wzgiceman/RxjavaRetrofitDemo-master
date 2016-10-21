@@ -1,39 +1,53 @@
 package com.example.retrofit.entity;
 
-import com.example.retrofit.listener.HttpProgressOnNextListener;
 import com.example.retrofit.http.HttpService;
+import com.example.retrofit.listener.HttpProgressOnNextListener;
 import com.example.retrofit.subscribers.ProgressDownSubscriber;
 
-import rx.Observable;
-
 /**
- * 下载请求数据基础类
+ * apk下载请求数据基础类
  * Created by WZG on 2016/10/20.
  */
 
-public abstract class  BaseDownEntity {
+public class DownInfo {
     /*存储位置*/
     private String savePath;
     /*下载url*/
     private String url;
     /*基础url*/
     private String baseUrl;
-    /*下载回调sub*/
+    /*文件总长度*/
+    private long countLength;
+    /*下载长度*/
+    private long readLength;
+    /*下载唯一的HttpService*/
+    private HttpService service;
+    /*回调监听*/
+    private HttpProgressOnNextListener listener;
+    /*回调处理类*/
     private ProgressDownSubscriber subscriber;
+    /*超时设置*/
+    private  int DEFAULT_TIMEOUT = 2;
 
-    public BaseDownEntity(String url,HttpProgressOnNextListener listener) {
+
+    public DownInfo(String url,HttpProgressOnNextListener listener) {
         setUrl(url);
         setBaseUrl(getBasUrl(url));
-        subscriber=new ProgressDownSubscriber(listener);
+        setListener(listener);
     }
 
-    /**
-     * 设置参数
-     *
-     * @param methods
-     * @return
-     */
-    public abstract Observable getObservable(HttpService methods);
+    public DownInfo(String url) {
+        setUrl(url);
+        setBaseUrl(getBasUrl(url));
+    }
+
+    public int getConnectionTime() {
+        return DEFAULT_TIMEOUT;
+    }
+
+    public void setConnectionTime(int DEFAULT_TIMEOUT) {
+        this.DEFAULT_TIMEOUT = DEFAULT_TIMEOUT;
+    }
 
     public ProgressDownSubscriber getSubscriber() {
         return subscriber;
@@ -41,6 +55,22 @@ public abstract class  BaseDownEntity {
 
     public void setSubscriber(ProgressDownSubscriber subscriber) {
         this.subscriber = subscriber;
+    }
+
+    public HttpProgressOnNextListener getListener() {
+        return listener;
+    }
+
+    public void setListener(HttpProgressOnNextListener listener) {
+        this.listener = listener;
+    }
+
+    public HttpService getService() {
+        return service;
+    }
+
+    public void setService(HttpService service) {
+        this.service = service;
     }
 
     public String getUrl() {
@@ -65,6 +95,23 @@ public abstract class  BaseDownEntity {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public long getCountLength() {
+        return countLength;
+    }
+
+    public void setCountLength(long countLength) {
+        this.countLength = countLength;
+    }
+
+
+    public long getReadLength() {
+        return readLength;
+    }
+
+    public void setReadLength(long readLength) {
+        this.readLength = readLength;
     }
 
     /**
