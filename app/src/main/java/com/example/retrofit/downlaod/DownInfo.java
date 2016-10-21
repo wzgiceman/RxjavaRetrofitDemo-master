@@ -1,8 +1,7 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.downlaod;
 
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
-import com.example.retrofit.subscribers.ProgressDownSubscriber;
 
 /**
  * apk下载请求数据基础类
@@ -28,12 +27,22 @@ public class DownInfo {
     private ProgressDownSubscriber subscriber;
     /*超时设置*/
     private  int DEFAULT_TIMEOUT = 2;
+    /*下载状态*/
+    private DownState state;
 
 
     public DownInfo(String url,HttpProgressOnNextListener listener) {
         setUrl(url);
         setBaseUrl(getBasUrl(url));
         setListener(listener);
+    }
+
+    public DownState getState() {
+        return state;
+    }
+
+    public void setState(DownState state) {
+        this.state = state;
     }
 
     public DownInfo(String url) {

@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
-import com.example.retrofit.entity.DownInfo;
-import com.example.retrofit.http.HttpDownManager;
+import com.example.retrofit.downlaod.DownInfo;
+import com.example.retrofit.downlaod.HttpDownManager;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
@@ -20,7 +20,7 @@ import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClickListener{
     private TextView tvMsg;
     private NumberProgressBar progressBar;
-    private     DownInfo apkApi;
+    private DownInfo apkApi;
     private HttpDownManager manager;
 
     public DownHolder(ViewGroup parent) {
@@ -43,23 +43,11 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_rx_down:
-                downApk();
+                manager.startDown(apkApi);
                 break;
             case R.id.btn_rx_pause:
-                pause();
+                manager.pause(apkApi);
                 break;
-        }
-    }
-
-    /*下载处理 6.0以后的手机需要加入权限判断*/
-    private void downApk(){
-        manager.startDown(apkApi);
-    }
-
-    /*暂停下载*/
-    private void pause(){
-        if(apkApi!=null){
-            HttpDownManager.getInstance().pause(apkApi);
         }
     }
 

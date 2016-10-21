@@ -1,4 +1,4 @@
-package com.example.retrofit.listener.DownLoadListener;
+package com.example.retrofit.downlaod.DownLoadListener;
 
 import java.io.IOException;
 

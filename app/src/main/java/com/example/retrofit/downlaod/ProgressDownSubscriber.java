@@ -1,9 +1,7 @@
-package com.example.retrofit.subscribers;
+package com.example.retrofit.downlaod;
 
 
-import com.example.retrofit.entity.DownInfo;
-import com.example.retrofit.http.HttpDownManager;
-import com.example.retrofit.listener.DownLoadListener.DownloadProgressListener;
+import com.example.retrofit.downlaod.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 
 import java.lang.ref.WeakReference;
@@ -39,6 +37,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onStart();
         }
+        baseDownEntity.setState(DownState.START);
     }
 
     /**
@@ -49,6 +48,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onComplete();
         }
+        baseDownEntity.setState(DownState.FINISH);
     }
 
     /**
@@ -64,6 +64,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         }
         /*停止下载*/
         HttpDownManager.getInstance().stopDown(baseDownEntity);
+        baseDownEntity.setState(DownState.ERROR);
     }
 
     /**
@@ -80,6 +81,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
 
     @Override
     public void update(long read, long count, boolean done) {
+        baseDownEntity.setState(DownState.DOWN);
         if(baseDownEntity.getCountLength()>count){
             read=baseDownEntity.getCountLength()-count+read;
         }else{

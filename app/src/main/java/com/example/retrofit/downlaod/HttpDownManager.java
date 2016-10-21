@@ -1,11 +1,11 @@
-package com.example.retrofit.http;
+package com.example.retrofit.downlaod;
 
-import com.example.retrofit.entity.DownInfo;
 import com.example.retrofit.exception.HttpTimeException;
 import com.example.retrofit.exception.RetryWhenNetworkException;
-import com.example.retrofit.listener.DownLoadListener.DownloadInterceptor;
+import com.example.retrofit.http.HttpManager;
+import com.example.retrofit.http.HttpService;
+import com.example.retrofit.downlaod.DownLoadListener.DownloadInterceptor;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
-import com.example.retrofit.subscribers.ProgressDownSubscriber;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,11 +119,12 @@ public class HttpDownManager {
      */
     public void stopDown(DownInfo info){
         if(info==null)return;
+        info.setState(DownState.STOP);
         ProgressDownSubscriber subscriber=info.getSubscriber();
         if(subscriber==null)return;
         subscriber.unsubscribe();
         info.setSubscriber(null);
-        HttpProgressOnNextListener listener=(HttpProgressOnNextListener) subscriber.getmSubscriberOnNextListener().get();
+        HttpProgressOnNextListener listener=info.getListener();
         if(listener!=null){
             listener.onStop();
         }
@@ -137,14 +138,15 @@ public class HttpDownManager {
      */
     public void pause(DownInfo info){
         if(info==null)return;
-        HttpProgressOnNextListener listener=info.getListener();
-        if(listener!=null){
-            listener.onPuase();
-        }
+        info.setState(DownState.PAUSE);
         ProgressDownSubscriber subscriber=info.getSubscriber();
         if(subscriber==null)return;
         subscriber.unsubscribe();
         info.setSubscriber(null);
+        HttpProgressOnNextListener listener=info.getListener();
+        if(listener!=null){
+            listener.onPuase();
+        }
         /*这里需要讲info信息写入到数据中，可自由扩展，用自己项目的数据库*/
     }
 

@@ -1,4 +1,4 @@
-package com.example.retrofit.listener.DownLoadListener;
+package com.example.retrofit.downlaod.DownLoadListener;
 
 import java.io.IOException;
 
@@ -11,6 +11,7 @@ import okio.Okio;
 import okio.Source;
 
 /**
+ * 自定义精度的body
  * @author wzg
  */
 public class DownloadResponseBody extends ResponseBody {
