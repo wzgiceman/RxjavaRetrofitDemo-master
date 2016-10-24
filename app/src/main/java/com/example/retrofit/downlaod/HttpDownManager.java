@@ -48,7 +48,7 @@ public class HttpDownManager {
      */
     public static HttpDownManager getInstance() {
         if (INSTANCE == null) {
-            synchronized (HttpManager.class) {
+            synchronized (HttpDownManager.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new HttpDownManager();
                 }
