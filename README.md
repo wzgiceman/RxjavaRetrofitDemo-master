@@ -66,4 +66,4 @@
 详细思路可以可以参看我的博客：
 [Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/column/details/13297.html)
 
-**如有帮助，欢迎start和follow后续会出更多好的开源技术
+**如有帮助，欢迎start和follow后续会出更多好的开源技术**
