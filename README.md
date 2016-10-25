@@ -55,15 +55,15 @@
     }
 ```
 
-
 * 初始化一个请求数据的对象继承BaseEntity对象，传递一个sub回调对象和context对象，设置请求需要的参数
 * 通过单利获取一个httpmanger对象，触发请求
 * 结果统一通过BaseEntity中的fun1方法判断，最后返回传递的sub对象中
 
-
 ##优化迭代
 根据反馈及时更新和优化的过程，如果在使用过程中有任何问题，欢迎反馈给我！
-![](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/git_history%20.png)
 
 ##思路
-详细思路可以可以参看我的博客：[Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/wzgiceman/article/details/51939574)
+详细思路可以可以参看我的博客：
+[Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/column/details/13297.html)
+
+**如有帮助，欢迎start和follow后续会出更多好的开源技术
