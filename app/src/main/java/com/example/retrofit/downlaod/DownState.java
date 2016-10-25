@@ -6,11 +6,23 @@ package com.example.retrofit.downlaod;
  */
 
 public enum  DownState {
-    START,
-    DOWN,
-    PAUSE,
-    STOP,
-    ERROR,
-    FINISH,
+    START(0),
+    DOWN(1),
+    PAUSE(2),
+    STOP(3),
+    ERROR(4),
+    FINISH(5);
+    private int state;
 
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    DownState(int state) {
+        this.state = state;
+    }
 }

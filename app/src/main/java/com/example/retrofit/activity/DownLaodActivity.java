@@ -7,12 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.retrofit.R;
 import com.example.retrofit.activity.adapter.DownAdapter;
+import com.example.retrofit.downlaod.DbUtil;
 import com.example.retrofit.downlaod.DownInfo;
-import com.example.retrofit.downlaod.HttpDownManager;
+import com.example.retrofit.downlaod.DownState;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DownLaodActivity extends AppCompatActivity {
     List<DownInfo> listData;
-
+    DbUtil dbUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,15 +31,22 @@ public class DownLaodActivity extends AppCompatActivity {
 
     /*数据*/
     private void initResource(){
-        listData=new ArrayList<>();
-        String[] downUrl=new String[]{"http://www.izaodao.com/app/izaodao_app.apk",
-                "http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4"};
-        for (int i = 0; i < downUrl.length; i++) {
-            File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    "test"+i + ".apk");
-            DownInfo apkApi=new DownInfo(downUrl[i]);
-            apkApi.setSavePath(outputFile.getAbsolutePath());
-            listData.add(apkApi);
+        dbUtil=DbUtil.getInstance();
+        listData=dbUtil.queryDownAll();
+        /*第一次模拟服务器返回数据掺入到数据库中*/
+        if(listData.isEmpty()){
+            String[] downUrl=new String[]{"http://www.izaodao.com/app/izaodao_app.apk",
+                    "http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4"};
+            for (int i = 0; i < downUrl.length; i++) {
+                File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                        "test"+i + ".apk");
+                DownInfo apkApi=new DownInfo(downUrl[i]);
+                apkApi.setId(i);
+                apkApi.setState(DownState.START);
+                apkApi.setSavePath(outputFile.getAbsolutePath());
+                dbUtil.save(apkApi);
+            }
+            listData=dbUtil.queryDownAll();
         }
     }
 
@@ -55,7 +62,9 @@ public class DownLaodActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /*停止全部下载*/
-        HttpDownManager.getInstance().stopAllDown();
+        /*记录退出时下载任务的状态-复原用*/
+        for (DownInfo downInfo : listData) {
+            dbUtil.update(downInfo);
+        }
     }
 }

@@ -3,57 +3,94 @@ package com.example.retrofit.downlaod;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * apk下载请求数据基础类
  * Created by WZG on 2016/10/20.
  */
 
-public class DownInfo {
+@Entity
+public class DownInfo{
+    @Id
+    private long id;
     /*存储位置*/
     private String savePath;
-    /*下载url*/
-    private String url;
-    /*基础url*/
-    private String baseUrl;
     /*文件总长度*/
     private long countLength;
     /*下载长度*/
     private long readLength;
     /*下载唯一的HttpService*/
+    @Transient
     private HttpService service;
     /*回调监听*/
+    @Transient
     private HttpProgressOnNextListener listener;
     /*超时设置*/
-    private  int DEFAULT_TIMEOUT = 6;
-    /*下载状态*/
-    private DownState state;
-
+    private  int connectonTime=6;
+    /*state状态数据库保存*/
+    private int stateInte;
+    /*url*/
+    private String url;
 
     public DownInfo(String url,HttpProgressOnNextListener listener) {
         setUrl(url);
-        setBaseUrl(getBasUrl(url));
         setListener(listener);
-    }
-
-    public DownState getState() {
-        return state;
-    }
-
-    public void setState(DownState state) {
-        this.state = state;
     }
 
     public DownInfo(String url) {
         setUrl(url);
-        setBaseUrl(getBasUrl(url));
     }
 
-    public int getConnectionTime() {
-        return DEFAULT_TIMEOUT;
+    @Generated(hash = 656702907)
+    public DownInfo(long id, String savePath, long countLength, long readLength,
+            int connectonTime, int stateInte, String url) {
+        this.id = id;
+        this.savePath = savePath;
+        this.countLength = countLength;
+        this.readLength = readLength;
+        this.connectonTime = connectonTime;
+        this.stateInte = stateInte;
+        this.url = url;
     }
 
-    public void setConnectionTime(int DEFAULT_TIMEOUT) {
-        this.DEFAULT_TIMEOUT = DEFAULT_TIMEOUT;
+    @Generated(hash = 928324469)
+    public DownInfo() {
+    }
+
+
+    public DownState getState() {
+        switch (getStateInte()){
+            case 0:
+                return DownState.START;
+            case 1:
+                return DownState.DOWN;
+            case 2:
+                return DownState.PAUSE;
+            case 3:
+                return DownState.STOP;
+            case 4:
+                return DownState.ERROR;
+            case 5:
+            default:
+                return DownState.FINISH;
+        }
+    }
+
+    public void setState(DownState state) {
+        setStateInte(state.getState());
+    }
+
+
+    public int getStateInte() {
+        return stateInte;
+    }
+
+    public void setStateInte(int stateInte) {
+        this.stateInte = stateInte;
     }
 
     public HttpProgressOnNextListener getListener() {
@@ -88,13 +125,6 @@ public class DownInfo {
         this.savePath = savePath;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
 
     public long getCountLength() {
         return countLength;
@@ -113,22 +143,19 @@ public class DownInfo {
         this.readLength = readLength;
     }
 
-    /**
-     * 读取baseurl
-     * @param url
-     * @return
-     */
-    protected String getBasUrl(String url) {
-        String head = "";
-        int index = url.indexOf("://");
-        if (index != -1) {
-            head = url.substring(0, index + 3);
-            url = url.substring(index + 3);
-        }
-        index = url.indexOf("/");
-        if (index != -1) {
-            url = url.substring(0, index + 1);
-        }
-        return head + url;
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getConnectonTime() {
+        return this.connectonTime;
+    }
+
+    public void setConnectonTime(int connectonTime) {
+        this.connectonTime = connectonTime;
     }
 }

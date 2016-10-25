@@ -8,11 +8,13 @@ import android.widget.Toast;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
 import com.example.retrofit.downlaod.DownInfo;
+import com.example.retrofit.downlaod.DownState;
 import com.example.retrofit.downlaod.HttpDownManager;
 import com.example.retrofit.listener.HttpProgressOnNextListener;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 /**
+ * 下载item
  * Created by WZG on 2016/10/21.
  */
 
@@ -36,13 +38,39 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
         super.setData(data);
         data.setListener(httpProgressOnNextListener);
         apkApi=data;
+        progressBar.setMax((int) apkApi.getCountLength());
+        progressBar.setProgress((int) apkApi.getReadLength());
+        /*第一次恢复 */
+        switch (apkApi.getState()){
+            case START:
+                /*起始状态*/
+                break;
+            case PAUSE:
+                tvMsg.setText("暂停中");
+                break;
+            case DOWN:
+                manager.startDown(apkApi);
+                break;
+            case STOP:
+                tvMsg.setText("下载停止");
+                break;
+            case ERROR:
+                tvMsg.setText("下載錯誤");
+                break;
+            case  FINISH:
+                tvMsg.setText("下载完成");
+                break;
+        }
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_rx_down:
-                manager.startDown(apkApi);
+                if(apkApi.getState()!= DownState.FINISH){
+                    manager.startDown(apkApi);
+                }
                 break;
             case R.id.btn_rx_pause:
                 manager.pause(apkApi);
@@ -54,6 +82,7 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
     HttpProgressOnNextListener<DownInfo> httpProgressOnNextListener=new HttpProgressOnNextListener<DownInfo>() {
         @Override
         public void onNext(DownInfo baseDownEntity) {
+            tvMsg.setText("提示：下载完成");
             Toast.makeText(getContext(),baseDownEntity.getSavePath(),Toast.LENGTH_SHORT).show();
         }
 
@@ -64,7 +93,7 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
 
         @Override
         public void onComplete() {
-            tvMsg.setText("提示：下载完成");
+            tvMsg.setText("提示：下载结束");
         }
 
         @Override

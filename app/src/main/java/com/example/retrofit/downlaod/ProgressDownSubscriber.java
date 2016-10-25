@@ -28,6 +28,13 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         this.downInfo=downInfo;
     }
 
+
+    public void setDownInfo(DownInfo downInfo) {
+        this.mSubscriberOnNextListener = new WeakReference<>(downInfo.getListener());
+        this.downInfo=downInfo;
+    }
+
+
     /**
      * 订阅开始时调用
      * 显示ProgressDialog
@@ -48,7 +55,9 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onComplete();
         }
+        HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.FINISH);
+        DbUtil.getInstance().update(downInfo);
     }
 
     /**
@@ -59,12 +68,12 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
      */
     @Override
     public void onError(Throwable e) {
-        /*停止下载*/
-        HttpDownManager.getInstance().stopDown(downInfo);
         if(mSubscriberOnNextListener.get()!=null){
             mSubscriberOnNextListener.get().onError(e);
         }
+        HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.ERROR);
+        DbUtil.getInstance().update(downInfo);
     }
 
     /**
@@ -91,14 +100,14 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
             /*接受进度消息，造成UI阻塞，如果不需要显示进度可去掉实现逻辑，减少压力*/
             rx.Observable.just(read).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Long>() {
-                @Override
-                public void call(Long aLong) {
+                        @Override
+                        public void call(Long aLong) {
                       /*如果暂停或者停止状态延迟，不需要继续发送回调，影响显示*/
-                    if(downInfo.getState()==DownState.PAUSE||downInfo.getState()==DownState.STOP)return;
-                    downInfo.setState(DownState.DOWN);
-                    mSubscriberOnNextListener.get().updateProgress(aLong,downInfo.getCountLength());
-                }
-            });
+                            if(downInfo.getState()==DownState.PAUSE||downInfo.getState()==DownState.STOP)return;
+                            downInfo.setState(DownState.DOWN);
+                            mSubscriberOnNextListener.get().updateProgress(aLong,downInfo.getCountLength());
+                        }
+                    });
         }
     }
 

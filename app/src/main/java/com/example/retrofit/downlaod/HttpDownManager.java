@@ -3,7 +3,6 @@ package com.example.retrofit.downlaod;
 import com.example.retrofit.downlaod.DownLoadListener.DownloadInterceptor;
 import com.example.retrofit.exception.HttpTimeException;
 import com.example.retrofit.exception.RetryWhenNetworkException;
-import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
 
 import java.io.File;
@@ -36,10 +35,13 @@ public class HttpDownManager {
     private HashMap<String,ProgressDownSubscriber> subMap;
     /*单利对象*/
     private volatile static HttpDownManager INSTANCE;
+    /*数据库类*/
+    private DbUtil db;
 
     private HttpDownManager(){
         downInfos=new HashSet<>();
         subMap=new HashMap<>();
+        db=DbUtil.getInstance();
     }
 
     /**
@@ -64,6 +66,7 @@ public class HttpDownManager {
     public void startDown(DownInfo info){
         /*正在下载不处理*/
         if(info==null||subMap.get(info.getUrl())!=null){
+            subMap.get(info.getUrl()).setDownInfo(info);
             return;
         }
         /*添加回调处理类*/
@@ -78,17 +81,18 @@ public class HttpDownManager {
             DownloadInterceptor interceptor = new DownloadInterceptor(subscriber);
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             //手动创建一个OkHttpClient并设置超时时间
-            builder.connectTimeout(info.getConnectionTime(), TimeUnit.SECONDS);
+            builder.connectTimeout(info.getConnectonTime(), TimeUnit.SECONDS);
             builder.addInterceptor(interceptor);
 
             Retrofit retrofit = new Retrofit.Builder()
                     .client(builder.build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .baseUrl(info.getBaseUrl())
+                    .baseUrl(getBasUrl(info.getUrl()))
                     .build();
             httpService= retrofit.create(HttpService.class);
             info.setService(httpService);
+            downInfos.add(info);
         }
         /*得到rx对象-上一次下載的位置開始下載*/
         httpService.download("bytes=" + info.getReadLength() + "-",info.getUrl())
@@ -130,7 +134,8 @@ public class HttpDownManager {
             subscriber.unsubscribe();
             subMap.remove(info.getUrl());
         }
-        /*删除数据库信息和本地文件*/
+        /*保存数据库信息和本地文件*/
+        db.save(info);
     }
 
 
@@ -148,6 +153,7 @@ public class HttpDownManager {
             subMap.remove(info.getUrl());
         }
         /*这里需要讲info信息写入到数据中，可自由扩展，用自己项目的数据库*/
+        db.update(info);
     }
 
     /**
@@ -181,6 +187,14 @@ public class HttpDownManager {
         return downInfos;
     }
 
+    /**
+     * 移除下载数据
+     * @param info
+     */
+    public void remove(DownInfo info){
+        subMap.remove(info.getUrl());
+        downInfos.remove(info);
+    }
 
     /**
      * 写入文件
@@ -197,26 +211,45 @@ public class HttpDownManager {
         }else{
             allLength=info.getCountLength();
         }
-            FileChannel channelOut = null;
-            RandomAccessFile randomAccessFile = null;
-            randomAccessFile = new RandomAccessFile(file, "rwd");
-            channelOut = randomAccessFile.getChannel();
-            MappedByteBuffer mappedBuffer = channelOut.map(FileChannel.MapMode.READ_WRITE,
-                    info.getReadLength(),allLength-info.getReadLength());
-            byte[] buffer = new byte[1024*8];
-            int len;
-            int record = 0;
-            while ((len = responseBody.byteStream().read(buffer)) != -1) {
-                mappedBuffer.put(buffer, 0, len);
-                record += len;
-            }
-            responseBody.byteStream().close();
-                if (channelOut != null) {
-                    channelOut.close();
-                }
-                if (randomAccessFile != null) {
-                    randomAccessFile.close();
-                }
+        FileChannel channelOut = null;
+        RandomAccessFile randomAccessFile = null;
+        randomAccessFile = new RandomAccessFile(file, "rwd");
+        channelOut = randomAccessFile.getChannel();
+        MappedByteBuffer mappedBuffer = channelOut.map(FileChannel.MapMode.READ_WRITE,
+                info.getReadLength(),allLength-info.getReadLength());
+        byte[] buffer = new byte[1024*8];
+        int len;
+        int record = 0;
+        while ((len = responseBody.byteStream().read(buffer)) != -1) {
+            mappedBuffer.put(buffer, 0, len);
+            record += len;
+        }
+        responseBody.byteStream().close();
+        if (channelOut != null) {
+            channelOut.close();
+        }
+        if (randomAccessFile != null) {
+            randomAccessFile.close();
+        }
+    }
+
+    /**
+     * 读取baseurl
+     * @param url
+     * @return
+     */
+    public String getBasUrl(String url) {
+        String head = "";
+        int index = url.indexOf("://");
+        if (index != -1) {
+            head = url.substring(0, index + 3);
+            url = url.substring(index + 3);
+        }
+        index = url.indexOf("/");
+        if (index != -1) {
+            url = url.substring(0, index + 1);
+        }
+        return head + url;
     }
 
 }
