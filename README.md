@@ -1,7 +1,6 @@
 # Retrofit+Rxjava+okhttp基本操作和统一处理的demo
 
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/http.gif)
-![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/down.gif)
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/upload.gif)
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/mu_down.gif)
 
