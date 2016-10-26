@@ -1,4 +1,4 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.entity.api;
 
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
@@ -10,7 +10,7 @@ import rx.Observable;
  * 测试数据
  * Created by WZG on 2016/7/16.
  */
-public class SubjectPostApi extends BaseEntity {
+public class SubjectPostApi<T> extends BaseApi<T> {
 //    接口需要传入的参数 可自定义不同类型
     private boolean all;
     /*任何你先要传递的参数*/
@@ -30,7 +30,9 @@ public class SubjectPostApi extends BaseEntity {
         super(listener,rxAppCompatActivity);
         setShowProgress(true);
         setCancel(true);
+        setMothed("AppFiftyToneGraph/videoLink");
     }
+
 
 
     public boolean isAll() {

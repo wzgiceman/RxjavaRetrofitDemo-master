@@ -1,4 +1,4 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.entity.resulte;
 
 /**
  * 回调信息统一封装类

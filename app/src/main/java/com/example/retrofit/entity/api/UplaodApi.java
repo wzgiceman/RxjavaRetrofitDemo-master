@@ -1,4 +1,4 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.entity.api;
 
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
@@ -14,7 +14,7 @@ import rx.Observable;
  * Created by WZG on 2016/10/20.
  */
 
-public class UplaodApi extends BaseEntity {
+public class UplaodApi<T> extends BaseApi<T> {
     /*需要上传的文件*/
     private MultipartBody.Part part;
 
@@ -22,6 +22,7 @@ public class UplaodApi extends BaseEntity {
     public UplaodApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(true);
+        setMothed("AppFiftyToneGraph/videoLink");
     }
 
     public MultipartBody.Part getPart() {

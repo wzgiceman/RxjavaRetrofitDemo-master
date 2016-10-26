@@ -3,34 +3,29 @@ package com.example.retrofit.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
-import com.example.retrofit.downlaod.DownInfo;
-import com.example.retrofit.entity.RetrofitEntity;
-import com.example.retrofit.entity.Subject;
-import com.example.retrofit.entity.SubjectPostApi;
-import com.example.retrofit.entity.UplaodApi;
-import com.example.retrofit.entity.UploadResulte;
-import com.example.retrofit.downlaod.HttpDownManager;
+import com.example.retrofit.entity.api.SubjectPostApi;
+import com.example.retrofit.entity.api.UplaodApi;
+import com.example.retrofit.entity.resulte.BaseResultEntity;
+import com.example.retrofit.entity.resulte.RetrofitEntity;
+import com.example.retrofit.entity.resulte.SubjectResulte;
+import com.example.retrofit.entity.resulte.UploadResulte;
 import com.example.retrofit.http.HttpManager;
 import com.example.retrofit.http.HttpService;
 import com.example.retrofit.listener.HttpOnNextListener;
-import com.example.retrofit.listener.HttpProgressOnNextListener;
 import com.example.retrofit.listener.upload.ProgressRequestBody;
 import com.example.retrofit.listener.upload.UploadProgressListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -55,8 +50,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         tvMsg = (TextView) findViewById(R.id.tv_msg);
         findViewById(R.id.btn_simple).setOnClickListener(this);
         findViewById(R.id.btn_rx).setOnClickListener(this);
-        findViewById(R.id.btn_rx_down).setOnClickListener(this);
-        findViewById(R.id.btn_rx_uploade).setOnClickListener(this);
         findViewById(R.id.btn_rx_mu_down).setOnClickListener(this);
         findViewById(R.id.btn_rx_pause).setOnClickListener(this);
         img=(ImageView)findViewById(R.id.img);
@@ -73,14 +66,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             case R.id.btn_rx:
                 simpleDo();
                 break;
-            case R.id.btn_rx_down:
-                downApk();
-                break;
             case R.id.btn_rx_uploade:
                 uploadeDo();
-                break;
-            case R.id.btn_rx_pause:
-                pause();
                 break;
             case  R.id.btn_rx_mu_down:
                 Intent intent=new Intent(this,DownLaodActivity.class);
@@ -89,61 +76,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
     }
 
-
-    /**
-     * Retrofit加入rxjava实现http请求
-     */
-    private void onButton9Click() {
-        //手动创建一个OkHttpClient并设置超时时间
-        okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(5, TimeUnit.SECONDS);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(builder.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(HttpManager.BASE_URL)
-                .build();
-
-//        加载框
-        final ProgressDialog pd = new ProgressDialog(this);
-
-        HttpService apiService = retrofit.create(HttpService.class);
-        Observable<RetrofitEntity> observable = apiService.getAllVedioBy(true);
-        observable.subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        new Subscriber<RetrofitEntity>() {
-                            @Override
-                            public void onCompleted() {
-                                if (pd != null && pd.isShowing()) {
-                                    pd.dismiss();
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                if (pd != null && pd.isShowing()) {
-                                    pd.dismiss();
-                                }
-                            }
-
-                            @Override
-                            public void onNext(RetrofitEntity retrofitEntity) {
-                                tvMsg.setText("无封装：\n" + retrofitEntity.getData().toString());
-                            }
-
-                            @Override
-                            public void onStart() {
-                                super.onStart();
-                                pd.show();
-                            }
-                        }
-
-                );
-    }
-
-    /*************************************************一般请求*******************************************************/
-
+    /*************************************************封装完请求*******************************************************/
 
     //    完美封装简化版
     private void simpleDo() {
@@ -154,10 +87,19 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
 
     //   回调一一对应
-    HttpOnNextListener simpleOnNextListener = new HttpOnNextListener<List<Subject>>() {
+    HttpOnNextListener simpleOnNextListener = new HttpOnNextListener<List<SubjectResulte>>() {
         @Override
-        public void onNext(List<Subject> subjects) {
-            tvMsg.setText("已封装：\n" + subjects.toString());
+        public void onNext(List<SubjectResulte> subjects) {
+            tvMsg.setText("网络返回：\n" + subjects.toString());
+        }
+
+        @Override
+        public void onCacheNext(String cache) {
+            /*缓存回调*/
+            Gson gson=new Gson();
+            java.lang.reflect.Type type = new TypeToken<BaseResultEntity<List<SubjectResulte>>>() {}.getType();
+            BaseResultEntity resultEntity= gson.fromJson(cache, type);
+            tvMsg.setText("缓存返回：\n"+resultEntity.getData().toString() );
         }
 
         /*用户主动调用，默认是不需要覆写该方法*/
@@ -172,72 +114,6 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         public void onCancel() {
             super.onCancel();
             tvMsg.setText("取消請求");
-        }
-    };
-
-
-    /******************************************* 下載 **********************************************/
-    DownInfo apkApi;
-    /*下载处理 6.0以后的手机需要加入权限判断*/
-    private void downApk(){
-        HttpDownManager manager=HttpDownManager.getInstance();
-        if(apkApi==null){
-            String apkUrl="http://www.izaodao.com/app/izaodao_app.apk";
-            File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "test3" +
-                    ".apk");
-            apkApi=new DownInfo(apkUrl,httpProgressOnNextListener);
-            apkApi.setSavePath(outputFile.getAbsolutePath());
-        }
-        manager.startDown(apkApi);
-    }
-
-    /*暂停下载*/
-    private void pause(){
-        if(apkApi!=null){
-            HttpDownManager.getInstance().pause(apkApi);
-        }
-    }
-
-    /*下载回调*/
-    HttpProgressOnNextListener<DownInfo> httpProgressOnNextListener=new HttpProgressOnNextListener<DownInfo>() {
-        @Override
-        public void onNext(DownInfo baseDownEntity) {
-            Toast.makeText(MainActivity.this,baseDownEntity.getSavePath(),Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onStart() {
-            tvMsg.setText("提示:开始下载");
-        }
-
-        @Override
-        public void onComplete() {
-            tvMsg.setText("提示：下载完成");
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            super.onError(e);
-            tvMsg.setText("失败:"+e.toString());
-        }
-
-
-        @Override
-        public void onPuase() {
-            super.onPuase();
-            tvMsg.setText("提示:暂停");
-        }
-
-        @Override
-        public void onStop() {
-            super.onStop();
-        }
-
-        @Override
-        public void updateProgress(long readLength, long countLength) {
-            tvMsg.setText("提示:下载中");
-            progressBar.setMax((int) countLength);
-            progressBar.setProgress((int) readLength);
         }
     };
 
@@ -280,4 +156,61 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
 
     };
+
+
+
+    /**********************************************************正常不封装使用**********************************/
+
+    /**
+     * Retrofit加入rxjava实现http请求
+     */
+    private void onButton9Click() {
+        String BASE_URL="http://www.izaodao.com/Api/";
+        //手动创建一个OkHttpClient并设置超时时间
+        okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(5, TimeUnit.SECONDS);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(builder.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .baseUrl(BASE_URL)
+                .build();
+
+//        加载框
+        final ProgressDialog pd = new ProgressDialog(this);
+
+        HttpService apiService = retrofit.create(HttpService.class);
+        Observable<RetrofitEntity> observable = apiService.getAllVedioBy(true);
+        observable.subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        new Subscriber<RetrofitEntity>() {
+                            @Override
+                            public void onCompleted() {
+                                if (pd != null && pd.isShowing()) {
+                                    pd.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                if (pd != null && pd.isShowing()) {
+                                    pd.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void onNext(RetrofitEntity retrofitEntity) {
+                                tvMsg.setText("无封装：\n" + retrofitEntity.getData().toString());
+                            }
+
+                            @Override
+                            public void onStart() {
+                                super.onStart();
+                                pd.show();
+                            }
+                        }
+
+                );
+    }
 }

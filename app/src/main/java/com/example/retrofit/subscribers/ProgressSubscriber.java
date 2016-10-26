@@ -5,12 +5,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.example.retrofit.entity.api.BaseApi;
+import com.example.retrofit.http.cookie.CookieDbUtil;
+import com.example.retrofit.http.cookie.CookieResulte;
 import com.example.retrofit.listener.HttpOnNextListener;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
+import rx.Observable;
 import rx.Subscriber;
 
 /**
@@ -28,6 +32,24 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     private WeakReference<Context> mActivity;
     //    加载框可自己定义
     private ProgressDialog pd;
+    /*请求数据*/
+    private BaseApi api;
+
+
+    /**
+     * 构造
+     * @param api
+     */
+    public ProgressSubscriber(BaseApi api){
+        this.api=api;
+        this.mSubscriberOnNextListener = api.getListener();
+        this.mActivity = new WeakReference<>(api.getRxAppCompatActivity());
+        setShowPorgress(api.isShowProgress());
+        if(api.isShowProgress()){
+            initProgressDialog(api.isCancel());
+        }
+    }
+
 
     /**
      * 初始化
@@ -97,6 +119,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     @Override
     public void onStart() {
         showProgressDialog();
+
+
     }
 
     /**
@@ -117,6 +141,34 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     public void onError(Throwable e) {
         Context context = mActivity.get();
         if (context == null) return;
+        dismissProgressDialog();
+        /*需要緩存并且本地有缓存才返回*/
+        if(api.isCache()){
+            Observable.just(api.getUrl()).subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    errorDo(e,context);
+                }
+
+                @Override
+                public void onNext(String s) {
+                    /*获取缓存数据*/
+                    CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(s);
+                    mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                }
+            });
+        }else{
+            errorDo(e,context);
+        }
+    }
+
+    /*错误统一处理*/
+    private void errorDo(Throwable e,Context context){
         if (e instanceof SocketTimeoutException) {
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
         } else if (e instanceof ConnectException) {
@@ -124,7 +176,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         } else {
             Toast.makeText(context, "错误" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        dismissProgressDialog();
         if(mSubscriberOnNextListener!=null){
             mSubscriberOnNextListener.onError(e);
         }

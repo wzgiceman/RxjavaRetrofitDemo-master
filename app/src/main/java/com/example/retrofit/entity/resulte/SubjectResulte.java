@@ -1,17 +1,18 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.entity.resulte;
 
 /**
  * 测试显示数据
  * Created by WZG on 2016/7/16.
  */
-public class Subject {
+public class SubjectResulte {
     private int id;
     private String name;
     private String title;
 
     @Override
     public String toString() {
-        return "名：" + name + "\n标题:" + title;
+        return "name->"+name+"\n";
+
     }
 
     public int getId() {

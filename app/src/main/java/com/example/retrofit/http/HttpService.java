@@ -1,9 +1,9 @@
 package com.example.retrofit.http;
 
-import com.example.retrofit.entity.BaseResultEntity;
-import com.example.retrofit.entity.RetrofitEntity;
-import com.example.retrofit.entity.Subject;
-import com.example.retrofit.entity.UploadResulte;
+import com.example.retrofit.entity.resulte.BaseResultEntity;
+import com.example.retrofit.entity.resulte.RetrofitEntity;
+import com.example.retrofit.entity.resulte.SubjectResulte;
+import com.example.retrofit.entity.resulte.UploadResulte;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface HttpService {
     Observable<RetrofitEntity> getAllVedioBy(@Body boolean once_no);
 
     @POST("AppFiftyToneGraph/videoLink")
-    Observable<BaseResultEntity<List<Subject>>> getAllVedioBys(@Body boolean once_no);
+    Observable<BaseResultEntity<List<SubjectResulte>>> getAllVedioBys(@Body boolean once_no);
 
     /*断点续传下载接口*/
     @Streaming/*大文件需要加入这个判断，防止下载过程中写入到内存中*/

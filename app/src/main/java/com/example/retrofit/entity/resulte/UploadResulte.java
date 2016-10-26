@@ -1,4 +1,4 @@
-package com.example.retrofit.entity;
+package com.example.retrofit.entity.resulte;
 
 /**
  * Created by WZG on 2016/10/20.
