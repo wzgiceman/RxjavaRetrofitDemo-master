@@ -51,7 +51,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn_simple).setOnClickListener(this);
         findViewById(R.id.btn_rx).setOnClickListener(this);
         findViewById(R.id.btn_rx_mu_down).setOnClickListener(this);
-        findViewById(R.id.btn_rx_pause).setOnClickListener(this);
+        findViewById(R.id.btn_rx_uploade).setOnClickListener(this);
         img=(ImageView)findViewById(R.id.img);
         progressBar=(NumberProgressBar)findViewById(R.id.number_progress_bar);
     }
