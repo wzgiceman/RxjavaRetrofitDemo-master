@@ -7,9 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.retrofit.R;
 import com.example.retrofit.activity.adapter.DownAdapter;
-import com.example.retrofit.retrofit.downlaod.DbUtil;
-import com.example.retrofit.retrofit.downlaod.DownInfo;
-import com.example.retrofit.retrofit.downlaod.DownState;
+import com.example.retrofit.retrofit_rx.downlaod.DbUtil;
+import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
+import com.example.retrofit.retrofit_rx.downlaod.DownState;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 
 import java.io.File;
