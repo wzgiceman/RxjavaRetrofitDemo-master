@@ -16,6 +16,7 @@ import java.util.List;
 
 
 /**
+ * 断点续传
  * 数据库工具类-geendao运用
  * Created by WZG on 2016/10/25.
  */
