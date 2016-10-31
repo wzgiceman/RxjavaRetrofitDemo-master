@@ -5,6 +5,8 @@ import com.example.retrofit.retrofit_rx.http.HttpService;
 import com.example.retrofit.retrofit_rx.listener.HttpOnNextListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import java.lang.ref.SoftReference;
+
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -14,9 +16,9 @@ import rx.functions.Func1;
  */
 public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     //rx生命周期管理
-    private RxAppCompatActivity rxAppCompatActivity;
+    private SoftReference<RxAppCompatActivity> rxAppCompatActivity;
     /*回调*/
-    private HttpOnNextListener listener;
+    private SoftReference<HttpOnNextListener> listener;
     /*是否能取消加载框*/
     private boolean cancel;
     /*是否显示加载框*/
@@ -96,7 +98,7 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     }
 
     public void setRxAppCompatActivity(RxAppCompatActivity rxAppCompatActivity) {
-        this.rxAppCompatActivity = rxAppCompatActivity;
+        this.rxAppCompatActivity =new SoftReference(rxAppCompatActivity) ;
     }
 
     public boolean isCache() {
@@ -123,20 +125,20 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
          this.cancel = cancel;
      }
 
-     public HttpOnNextListener getListener() {
+     public SoftReference<HttpOnNextListener> getListener() {
          return listener;
      }
 
      public void setListener(HttpOnNextListener listener) {
-         this.listener = listener;
+         this.listener = new SoftReference(listener);
      }
 
     /*
      * 获取当前rx生命周期
      * @return
      */
-    public RxAppCompatActivity getRxAppCompatActivity() {
-        return rxAppCompatActivity;
+    public  RxAppCompatActivity getRxAppCompatActivity() {
+        return rxAppCompatActivity.get();
     }
 
     @Override

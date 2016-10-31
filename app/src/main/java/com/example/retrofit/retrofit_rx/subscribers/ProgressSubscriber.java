@@ -8,12 +8,12 @@ import android.widget.Toast;
 import com.example.retrofit.MyApplication;
 import com.example.retrofit.retrofit_rx.Api.BaseApi;
 import com.example.retrofit.retrofit_rx.exception.HttpTimeException;
-import com.example.retrofit.retrofit_rx.utils.CookieDbUtil;
 import com.example.retrofit.retrofit_rx.http.cookie.CookieResulte;
 import com.example.retrofit.retrofit_rx.listener.HttpOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.AppUtil;
+import com.example.retrofit.retrofit_rx.utils.CookieDbUtil;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
@@ -30,9 +30,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     /*是否弹框*/
     private boolean showPorgress=true;
     //    回调接口
-    private HttpOnNextListener mSubscriberOnNextListener;
+    private SoftReference<HttpOnNextListener> mSubscriberOnNextListener;
     //    弱引用反正内存泄露
-    private WeakReference<Context> mActivity;
+    private SoftReference<Context> mActivity;
     //    加载框可自己定义
     private ProgressDialog pd;
     /*请求数据*/
@@ -46,29 +46,13 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     public ProgressSubscriber(BaseApi api){
         this.api=api;
         this.mSubscriberOnNextListener = api.getListener();
-        this.mActivity = new WeakReference<>(api.getRxAppCompatActivity());
+        this.mActivity = new SoftReference<>(api.getRxAppCompatActivity());
         setShowPorgress(api.isShowProgress());
         if(api.isShowProgress()){
             initProgressDialog(api.isCancel());
         }
     }
 
-
-    /**
-     * 初始化
-     * @param mSubscriberOnNextListener
-     * @param context
-     * @param showPorgress 是否需要加载框
-     * @param cancel 是否能取消加载框
-     */
-    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, Context context,boolean showPorgress,boolean cancel) {
-        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
-        this.mActivity = new WeakReference<>(context);
-        setShowPorgress(showPorgress);
-        if(showPorgress){
-            initProgressDialog(cancel);
-        }
-    }
 
 
     /**
@@ -129,7 +113,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             if(cookieResulte!=null){
                 long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
                 if(time< api.getCookieNetWorkTime()){
-                    mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                    if( mSubscriberOnNextListener.get()!=null){
+                        mSubscriberOnNextListener.get().onCacheNext(cookieResulte.getResulte());
+                    }
                     onCompleted();
                     unsubscribe();
                 }
@@ -176,7 +162,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
                     }
                     long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
                     if(time<api.getCookieNoNetWorkTime()){
-                        mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                        if( mSubscriberOnNextListener.get()!=null){
+                            mSubscriberOnNextListener.get().onCacheNext(cookieResulte.getResulte());
+                        }
                     }else{
                         CookieDbUtil.getInstance().deleteCookie(cookieResulte);
                         throw new HttpTimeException("网络错误");
@@ -199,8 +187,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         } else {
             Toast.makeText(context, "错误" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        if(mSubscriberOnNextListener!=null){
-            mSubscriberOnNextListener.onError(e);
+        if(mSubscriberOnNextListener.get()!=null){
+            mSubscriberOnNextListener.get().onError(e);
         }
     }
 
@@ -211,8 +199,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onNext(T t) {
-        if (mSubscriberOnNextListener != null) {
-            mSubscriberOnNextListener.onNext(t);
+        if (mSubscriberOnNextListener.get() != null) {
+            mSubscriberOnNextListener.get().onNext(t);
         }
     }
 

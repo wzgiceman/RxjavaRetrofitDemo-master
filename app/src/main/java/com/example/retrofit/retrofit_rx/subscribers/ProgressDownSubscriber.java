@@ -8,7 +8,7 @@ import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
 import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.DbUtil;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -23,19 +23,19 @@ import rx.functions.Action1;
  */
 public class ProgressDownSubscriber<T> extends Subscriber<T> implements DownloadProgressListener {
     //弱引用结果回调
-    private WeakReference<HttpDownOnNextListener> mSubscriberOnNextListener;
+    private SoftReference<HttpDownOnNextListener> mSubscriberOnNextListener;
     /*下载数据*/
     private DownInfo downInfo;
 
 
     public ProgressDownSubscriber(DownInfo downInfo) {
-        this.mSubscriberOnNextListener = new WeakReference<>(downInfo.getListener());
+        this.mSubscriberOnNextListener = new SoftReference<>(downInfo.getListener());
         this.downInfo=downInfo;
     }
 
 
     public void setDownInfo(DownInfo downInfo) {
-        this.mSubscriberOnNextListener = new WeakReference<>(downInfo.getListener());
+        this.mSubscriberOnNextListener = new SoftReference<>(downInfo.getListener());
         this.downInfo=downInfo;
     }
 
