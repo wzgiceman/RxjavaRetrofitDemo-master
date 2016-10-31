@@ -1,6 +1,7 @@
 package com.example.retrofit.entity.resulte;
 
 /**
+ * 上传回调结果
  * Created by WZG on 2016/10/20.
  */
 
