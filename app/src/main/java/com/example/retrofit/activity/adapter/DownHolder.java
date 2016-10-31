@@ -7,10 +7,10 @@ import android.widget.Toast;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
-import com.example.retrofit.downlaod.DownInfo;
-import com.example.retrofit.downlaod.DownState;
-import com.example.retrofit.downlaod.HttpDownManager;
-import com.example.retrofit.listener.HttpProgressOnNextListener;
+import com.example.retrofit.retrofit.downlaod.DownInfo;
+import com.example.retrofit.retrofit.downlaod.DownState;
+import com.example.retrofit.retrofit.downlaod.HttpDownManager;
+import com.example.retrofit.retrofit.listener.HttpProgressOnNextListener;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 /**

@@ -1,7 +1,8 @@
 package com.example.retrofit.entity.api;
 
-import com.example.retrofit.http.HttpService;
-import com.example.retrofit.listener.HttpOnNextListener;
+import com.example.retrofit.retrofit.Api.BaseApi;
+import com.example.retrofit.retrofit.http.HttpService;
+import com.example.retrofit.retrofit.listener.HttpOnNextListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import okhttp3.MediaType;
