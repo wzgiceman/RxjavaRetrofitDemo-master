@@ -1,7 +1,10 @@
-package com.example.retrofit.retrofit_rx.downlaod;
+package com.example.retrofit.retrofit_rx.subscribers;
 
 
+import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
 import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadProgressListener;
+import com.example.retrofit.retrofit_rx.downlaod.DownState;
+import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
 import com.example.retrofit.retrofit_rx.listener.HttpProgressOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.DbUtil;
 
@@ -12,6 +15,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
+ * 断点下载处理类Subscriber
  * 用于在Http请求开始时，自动显示一个ProgressDialog
  * 在Http请求结束是，关闭ProgressDialog
  * 调用者自己对请求数据进行处理
