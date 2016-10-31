@@ -3,6 +3,7 @@ package com.example.retrofit.retrofit_rx.downlaod;
 
 import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.retrofit_rx.listener.HttpProgressOnNextListener;
+import com.example.retrofit.retrofit_rx.utils.DbUtil;
 
 import java.lang.ref.WeakReference;
 

@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.example.retrofit.MyApplication;
 import com.example.retrofit.retrofit_rx.Api.BaseApi;
 import com.example.retrofit.retrofit_rx.exception.HttpTimeException;
-import com.example.retrofit.retrofit_rx.http.cookie.CookieDbUtil;
+import com.example.retrofit.retrofit_rx.utils.CookieDbUtil;
 import com.example.retrofit.retrofit_rx.http.cookie.CookieResulte;
 import com.example.retrofit.retrofit_rx.listener.HttpOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.AppUtil;

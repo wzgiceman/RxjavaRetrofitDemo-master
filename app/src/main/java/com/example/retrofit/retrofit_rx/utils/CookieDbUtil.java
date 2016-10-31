@@ -1,4 +1,4 @@
-package com.example.retrofit.retrofit_rx.http.cookie;
+package com.example.retrofit.retrofit_rx.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,6 +7,8 @@ import com.example.retrofit.MyApplication;
 import com.example.retrofit.retrofit_rx.downlaod.DaoMaster;
 import com.example.retrofit.retrofit_rx.downlaod.DaoSession;
 import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
+import com.example.retrofit.retrofit_rx.http.cookie.CookieResulte;
+import com.example.retrofit.retrofit_rx.http.cookie.CookieResulteDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 

@@ -1,9 +1,14 @@
-package com.example.retrofit.retrofit_rx.downlaod;
+package com.example.retrofit.retrofit_rx.utils;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.retrofit.MyApplication;
+import com.example.retrofit.retrofit_rx.downlaod.DaoMaster;
+import com.example.retrofit.retrofit_rx.downlaod.DaoSession;
+import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
+import com.example.retrofit.retrofit_rx.downlaod.DownInfoDao;
+import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 

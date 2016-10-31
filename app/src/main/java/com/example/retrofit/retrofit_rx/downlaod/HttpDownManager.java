@@ -4,6 +4,7 @@ import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadInterc
 import com.example.retrofit.retrofit_rx.exception.HttpTimeException;
 import com.example.retrofit.retrofit_rx.exception.RetryWhenNetworkException;
 import com.example.retrofit.retrofit_rx.http.HttpService;
+import com.example.retrofit.retrofit_rx.utils.DbUtil;
 
 import java.io.File;
 import java.io.IOException;
