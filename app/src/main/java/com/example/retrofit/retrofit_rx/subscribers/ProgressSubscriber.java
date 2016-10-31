@@ -128,7 +128,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(api.getUrl());
             if(cookieResulte!=null){
                 long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
-                if(time<api.getConnectionTime()){
+
+                if(time< api.getCookieNetWorkTime()){
                     mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
                     onCompleted();
                     unsubscribe();

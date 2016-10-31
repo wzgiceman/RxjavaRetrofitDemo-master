@@ -50,6 +50,7 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     public abstract Observable getObservable(HttpService methods);
 
 
+
     public int getCookieNoNetWorkTime() {
         return cookieNoNetWorkTime;
     }

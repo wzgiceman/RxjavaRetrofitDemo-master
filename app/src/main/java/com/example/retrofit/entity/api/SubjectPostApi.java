@@ -33,7 +33,7 @@ public class SubjectPostApi extends BaseApi {
         setCancel(true);
         setCache(true);
         setMothed("AppFiftyToneGraph/videoLink");
-        setCookieNetWorkTime(30);
+        setCookieNetWorkTime(60);
         setCookieNoNetWorkTime(24*60*60);
     }
 
