@@ -10,7 +10,7 @@ import com.example.retrofit.R;
 import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
 import com.example.retrofit.retrofit_rx.downlaod.DownState;
 import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
-import com.example.retrofit.retrofit_rx.listener.HttpProgressOnNextListener;
+import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 /**
@@ -79,7 +79,7 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
     }
 
     /*下载回调*/
-    HttpProgressOnNextListener<DownInfo> httpProgressOnNextListener=new HttpProgressOnNextListener<DownInfo>() {
+    HttpDownOnNextListener<DownInfo> httpProgressOnNextListener=new HttpDownOnNextListener<DownInfo>() {
         @Override
         public void onNext(DownInfo baseDownEntity) {
             tvMsg.setText("提示：下载完成");

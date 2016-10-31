@@ -4,7 +4,7 @@ package com.example.retrofit.retrofit_rx.listener;
  * 下载过程中的回调处理
  * Created by WZG on 2016/10/20.
  */
-public abstract class HttpProgressOnNextListener<T> {
+public abstract class HttpDownOnNextListener<T> {
     /**
      * 成功后回调方法
      * @param t

@@ -1,7 +1,7 @@
 package com.example.retrofit.retrofit_rx.downlaod;
 
 import com.example.retrofit.retrofit_rx.http.HttpService;
-import com.example.retrofit.retrofit_rx.listener.HttpProgressOnNextListener;
+import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -28,7 +28,7 @@ public class DownInfo{
     private HttpService service;
     /*回调监听*/
     @Transient
-    private HttpProgressOnNextListener listener;
+    private HttpDownOnNextListener listener;
     /*超时设置*/
     private  int connectonTime=6;
     /*state状态数据库保存*/
@@ -36,7 +36,7 @@ public class DownInfo{
     /*url*/
     private String url;
 
-    public DownInfo(String url,HttpProgressOnNextListener listener) {
+    public DownInfo(String url,HttpDownOnNextListener listener) {
         setUrl(url);
         setListener(listener);
     }
@@ -93,11 +93,11 @@ public class DownInfo{
         this.stateInte = stateInte;
     }
 
-    public HttpProgressOnNextListener getListener() {
+    public HttpDownOnNextListener getListener() {
         return listener;
     }
 
-    public void setListener(HttpProgressOnNextListener listener) {
+    public void setListener(HttpDownOnNextListener listener) {
         this.listener = listener;
     }
 

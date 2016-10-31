@@ -5,7 +5,7 @@ import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
 import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadProgressListener;
 import com.example.retrofit.retrofit_rx.downlaod.DownState;
 import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
-import com.example.retrofit.retrofit_rx.listener.HttpProgressOnNextListener;
+import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.DbUtil;
 
 import java.lang.ref.WeakReference;
@@ -23,7 +23,7 @@ import rx.functions.Action1;
  */
 public class ProgressDownSubscriber<T> extends Subscriber<T> implements DownloadProgressListener {
     //弱引用结果回调
-    private WeakReference<HttpProgressOnNextListener> mSubscriberOnNextListener;
+    private WeakReference<HttpDownOnNextListener> mSubscriberOnNextListener;
     /*下载数据*/
     private DownInfo downInfo;
 
