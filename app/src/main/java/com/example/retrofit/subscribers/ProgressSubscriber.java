@@ -124,29 +124,16 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         showProgressDialog();
         /*缓存并且有网*/
         if(api.isCache()&& AppUtil.isNetworkAvailable(MyApplication.app)){
-            Observable.just(api.getUrl()).subscribe(new Subscriber<String>() {
-                @Override
-                public void onCompleted() {
-
+             /*获取缓存数据*/
+            CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(api.getUrl());
+            if(cookieResulte!=null){
+                long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
+                if(time<api.getConnectionTime()){
+                    mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                    onCompleted();
+                    unsubscribe();
                 }
-
-                @Override
-                public void onError(Throwable e) {
-                    errorDo(e);
-                }
-
-                @Override
-                public void onNext(String s) {
-                    /*获取缓存数据*/
-                    CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(s);
-                        long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
-                        if(time<api.getConnectionTime()){
-                            mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
-                            onCompleted();
-                            unsubscribe();
-                        }
-                }
-            });
+            }
         }
     }
 
@@ -184,6 +171,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
                 public void onNext(String s) {
                     /*获取缓存数据*/
                     CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(s);
+                    if(cookieResulte==null){
+                        throw new HttpTimeException("网络错误");
+                    }
                     long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
                     if(time<api.getCookieNoNetWorkTime()){
                         mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
