@@ -14,12 +14,12 @@ import rx.Observable;
  * Created by WZG on 2016/10/20.
  */
 
-public class UplaodApi<T> extends BaseApi<T> {
+public class UploadApi<T> extends BaseApi<T> {
     /*需要上传的文件*/
     private MultipartBody.Part part;
 
 
-    public UplaodApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public UploadApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(true);
         setMothed("AppFiftyToneGraph/videoLink");

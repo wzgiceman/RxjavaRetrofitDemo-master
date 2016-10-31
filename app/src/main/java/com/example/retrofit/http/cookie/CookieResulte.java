@@ -16,18 +16,24 @@ public class CookieResulte {
     private String url;
     /*返回结果*/
     private String resulte;
+    /*时间*/
+    private long time;
 
-    public CookieResulte(String url, String resulte) {
+    public CookieResulte(String url, String resulte, long time) {
         this.url = url;
         this.resulte = resulte;
+        this.time = time;
     }
 
-    @Generated(hash = 549012884)
-    public CookieResulte(long id, String url, String resulte) {
+
+    @Generated(hash = 1796425720)
+    public CookieResulte(long id, String url, String resulte, long time) {
         this.id = id;
         this.url = url;
         this.resulte = resulte;
+        this.time = time;
     }
+
     @Generated(hash = 2104390000)
     public CookieResulte() {
     }
@@ -48,5 +54,11 @@ public class CookieResulte {
     }
     public void setResulte(String resulte) {
         this.resulte = resulte;
+    }
+    public long getTime() {
+        return this.time;
+    }
+    public void setTime(long time) {
+        this.time = time;
     }
 }

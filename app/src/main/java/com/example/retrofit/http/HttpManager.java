@@ -49,7 +49,7 @@ public class HttpManager {
     public void doHttpDeal(BaseApi basePar) {
         //手动创建一个OkHttpClient并设置超时时间缓存等设置
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.addInterceptor(new CookieInterceptor());
+        builder.addInterceptor(new CookieInterceptor(basePar.isCache()));
         builder.connectTimeout(basePar.getConnectionTime(), TimeUnit.SECONDS);
         builder.addNetworkInterceptor(new CacheInterceptor());
         /*缓存位置和大小*/

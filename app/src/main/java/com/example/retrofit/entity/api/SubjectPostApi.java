@@ -10,7 +10,7 @@ import rx.Observable;
  * 测试数据
  * Created by WZG on 2016/7/16.
  */
-public class SubjectPostApi<T> extends BaseApi<T> {
+public class SubjectPostApi extends BaseApi {
 //    接口需要传入的参数 可自定义不同类型
     private boolean all;
     /*任何你先要传递的参数*/
@@ -30,7 +30,9 @@ public class SubjectPostApi<T> extends BaseApi<T> {
         super(listener,rxAppCompatActivity);
         setShowProgress(true);
         setCancel(true);
+        setCache(true);
         setMothed("AppFiftyToneGraph/videoLink");
+        setCookieNoNetWorkTime(2);
     }
 
 

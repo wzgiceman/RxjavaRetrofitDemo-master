@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.example.retrofit.MyApplication;
 import com.example.retrofit.entity.api.BaseApi;
+import com.example.retrofit.exception.HttpTimeException;
 import com.example.retrofit.http.cookie.CookieDbUtil;
 import com.example.retrofit.http.cookie.CookieResulte;
 import com.example.retrofit.listener.HttpOnNextListener;
+import com.example.retrofit.utils.AppUtil;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
@@ -119,8 +122,32 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     @Override
     public void onStart() {
         showProgressDialog();
+        /*缓存并且有网*/
+        if(api.isCache()&& AppUtil.isNetworkAvailable(MyApplication.app)){
+            Observable.just(api.getUrl()).subscribe(new Subscriber<String>() {
+                @Override
+                public void onCompleted() {
 
+                }
 
+                @Override
+                public void onError(Throwable e) {
+                    errorDo(e);
+                }
+
+                @Override
+                public void onNext(String s) {
+                    /*获取缓存数据*/
+                    CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(s);
+                        long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
+                        if(time<api.getConnectionTime()){
+                            mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                            onCompleted();
+                            unsubscribe();
+                        }
+                }
+            });
+        }
     }
 
     /**
@@ -139,8 +166,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onError(Throwable e) {
-        Context context = mActivity.get();
-        if (context == null) return;
         dismissProgressDialog();
         /*需要緩存并且本地有缓存才返回*/
         if(api.isCache()){
@@ -152,23 +177,31 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
 
                 @Override
                 public void onError(Throwable e) {
-                    errorDo(e,context);
+                    errorDo(e);
                 }
 
                 @Override
                 public void onNext(String s) {
                     /*获取缓存数据*/
                     CookieResulte cookieResulte= CookieDbUtil.getInstance().queryCookieBy(s);
-                    mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                    long time= (System.currentTimeMillis()-cookieResulte.getTime())/1000;
+                    if(time<api.getCookieNoNetWorkTime()){
+                        mSubscriberOnNextListener.onCacheNext(cookieResulte.getResulte());
+                    }else{
+                        CookieDbUtil.getInstance().deleteCookie(cookieResulte);
+                        throw new HttpTimeException("网络错误");
+                    }
                 }
             });
         }else{
-            errorDo(e,context);
+            errorDo(e);
         }
     }
 
     /*错误统一处理*/
-    private void errorDo(Throwable e,Context context){
+    private void errorDo(Throwable e){
+        Context context = mActivity.get();
+        if (context == null) return;
         if (e instanceof SocketTimeoutException) {
             Toast.makeText(context, "网络中断，请检查您的网络状态", Toast.LENGTH_SHORT).show();
         } else if (e instanceof ConnectException) {

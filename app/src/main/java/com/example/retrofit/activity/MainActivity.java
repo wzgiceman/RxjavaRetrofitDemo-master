@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
 import com.example.retrofit.entity.api.SubjectPostApi;
-import com.example.retrofit.entity.api.UplaodApi;
+import com.example.retrofit.entity.api.UploadApi;
 import com.example.retrofit.entity.resulte.BaseResultEntity;
 import com.example.retrofit.entity.resulte.RetrofitEntity;
 import com.example.retrofit.entity.resulte.SubjectResulte;
@@ -132,7 +132,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
               progressBar.setProgress((int) currentBytesCount);
           }
       }));
-      UplaodApi uplaodApi = new UplaodApi(httpOnNextListener,this);
+      UploadApi uplaodApi = new UploadApi(httpOnNextListener,this);
       uplaodApi.setPart(part);
       HttpManager manager = HttpManager.getInstance();
       manager.doHttpDeal(uplaodApi);
