@@ -1,8 +1,7 @@
 # Retrofit+Rxjava+okhttp基本操作和统一处理的demo
 
-![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/http.gif)
-![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/upload.gif)
-![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/mu_down.gif)
+![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/retrofit_string.gif)
+
 
         1.Retrofit+Rxjava+okhttp基本使用方法
         2.统一处理请求数据格式
