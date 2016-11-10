@@ -1,6 +1,6 @@
-package com.example.retrofit.retrofit_rx.downlaod;
+package com.example.retrofit.retrofit_rx.download;
 
-import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadInterceptor;
+import com.example.retrofit.retrofit_rx.download.DownLoadListener.DownloadInterceptor;
 import com.example.retrofit.retrofit_rx.exception.HttpTimeException;
 import com.example.retrofit.retrofit_rx.exception.RetryWhenNetworkException;
 import com.example.retrofit.retrofit_rx.http.HttpService;

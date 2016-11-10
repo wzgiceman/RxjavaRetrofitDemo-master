@@ -1,4 +1,4 @@
-package com.example.retrofit.retrofit_rx.downlaod.DownLoadListener;
+package com.example.retrofit.retrofit_rx.download.DownLoadListener;
 
 import java.io.IOException;
 import okhttp3.MediaType;

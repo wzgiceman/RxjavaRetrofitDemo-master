@@ -1,4 +1,4 @@
-package com.example.retrofit.retrofit_rx.downlaod;
+package com.example.retrofit.retrofit_rx.download;
 
 /**
  * 下载状态

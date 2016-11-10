@@ -1,10 +1,10 @@
 package com.example.retrofit.retrofit_rx.subscribers;
 
 
-import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
-import com.example.retrofit.retrofit_rx.downlaod.DownLoadListener.DownloadProgressListener;
-import com.example.retrofit.retrofit_rx.downlaod.DownState;
-import com.example.retrofit.retrofit_rx.downlaod.HttpDownManager;
+import com.example.retrofit.retrofit_rx.download.DownInfo;
+import com.example.retrofit.retrofit_rx.download.DownLoadListener.DownloadProgressListener;
+import com.example.retrofit.retrofit_rx.download.DownState;
+import com.example.retrofit.retrofit_rx.download.HttpDownManager;
 import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 import com.example.retrofit.retrofit_rx.utils.DbUtil;
 

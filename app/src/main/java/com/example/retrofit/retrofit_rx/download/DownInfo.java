@@ -1,4 +1,4 @@
-package com.example.retrofit.retrofit_rx.downlaod;
+package com.example.retrofit.retrofit_rx.download;
 
 import com.example.retrofit.retrofit_rx.http.HttpService;
 import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;

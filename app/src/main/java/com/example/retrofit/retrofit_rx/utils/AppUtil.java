@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.example.retrofit.retrofit_rx.downlaod.DownInfo;
+import com.example.retrofit.retrofit_rx.download.DownInfo;
 
 import java.io.File;
 import java.io.IOException;
