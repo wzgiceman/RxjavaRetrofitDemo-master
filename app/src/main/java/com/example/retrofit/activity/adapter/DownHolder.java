@@ -7,11 +7,11 @@ import android.widget.Toast;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
-import com.example.retrofit.retrofit_rx.download.DownInfo;
-import com.example.retrofit.retrofit_rx.download.DownState;
-import com.example.retrofit.retrofit_rx.download.HttpDownManager;
-import com.example.retrofit.retrofit_rx.listener.HttpDownOnNextListener;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownInfo;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.HttpDownManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpDownOnNextListener;
 
 /**
  * 下载item
@@ -26,7 +26,7 @@ public class DownHolder extends BaseViewHolder<DownInfo> implements View.OnClick
 
     public DownHolder(ViewGroup parent) {
         super(parent, R.layout.view_item_holder);
-        manager=HttpDownManager.getInstance();
+        manager= HttpDownManager.getInstance();
         $(R.id.btn_rx_down).setOnClickListener(this);
         $(R.id.btn_rx_pause).setOnClickListener(this);
         progressBar=$(R.id.number_progress_bar);

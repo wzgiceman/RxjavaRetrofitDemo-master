@@ -28,6 +28,20 @@
     compile 'com.google.code.gson:gson:+'
 ```
 
+##初始
+
+* 1.moudel导入工程
+
+```java
+  compile project(':rxretrofitlibrary')
+```
+
+* 2.初始化设置：Application中初始化
+
+```java
+RxRetrofitApp.init(this);
+```
+
 ##代码使用
 ```java
     //    完美封装简化版

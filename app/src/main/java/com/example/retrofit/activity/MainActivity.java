@@ -6,26 +6,29 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.retrofit.R;
 import com.example.retrofit.entity.api.SubjectPostApi;
 import com.example.retrofit.entity.api.UploadApi;
-import com.example.retrofit.retrofit_rx.Api.BaseResultEntity;
-import com.example.retrofit.entity.resulte.RetrofitEntity;
-import com.example.retrofit.entity.resulte.SubjectResulte;
-import com.example.retrofit.entity.resulte.UploadResulte;
-import com.example.retrofit.retrofit_rx.http.HttpManager;
-import com.example.retrofit.retrofit_rx.http.HttpService;
-import com.example.retrofit.retrofit_rx.listener.HttpOnNextListener;
-import com.example.retrofit.retrofit_rx.listener.upload.ProgressRequestBody;
-import com.example.retrofit.retrofit_rx.listener.upload.UploadProgressListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.RetrofitEntity;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.SubjectResulte;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.UploadResulte;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpService;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.ProgressRequestBody;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.UploadProgressListener;
+
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;

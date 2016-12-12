@@ -25,22 +25,10 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:+'
-
+    compile 'com.android.support:appcompat-v7:23.0.3'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
-    compile 'com.github.bumptech.glide:glide:+'
-    compile 'com.jude:easyrecyclerview:+'
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'org.greenrobot:greendao:+'
-
-    /*rx-android-java*/
-    compile 'io.reactivex:rxjava:+'
-    compile 'com.squareup.retrofit:adapter-rxjava:+'
-    compile 'com.trello:rxlifecycle:+'
-    compile 'com.trello:rxlifecycle-components:+'
-    /*rotrofit*/
-    compile 'com.squareup.retrofit2:retrofit:+'
-    compile 'com.squareup.retrofit2:converter-gson:+'
-    compile 'com.squareup.retrofit2:adapter-rxjava:+'
-    compile 'com.google.code.gson:gson:+'
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.jude:easyrecyclerview:4.2.6'
+    compile project(':rxretrofitlibrary')
+    compile 'com.android.support:recyclerview-v7:25.0.0'
 }
