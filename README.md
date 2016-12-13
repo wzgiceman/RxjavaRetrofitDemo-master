@@ -89,8 +89,9 @@ RxRetrofitApp.init(this);
 **如有帮助，欢迎start和follow后续会出更多好的开源技术**
 
 
-[**最近不胜被CSDN提名参加博客之星评选，如果对大家有帮助，欢迎投票给予支出和鼓励!**](http://blog.csdn.net/vote/candidate.html?username=u014610664)
 
 #                                     微信交流群
 
 ![](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/wx.png)
+
+[**最近有幸被CSDN提名参加博客之星评选，希望你能投我一票!**](http://blog.csdn.net/vote/candidate.html?username=u014610664)
