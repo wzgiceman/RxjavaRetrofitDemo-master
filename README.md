@@ -93,4 +93,4 @@ RxRetrofitApp.init(this);
 
 #                                     微信交流群
 
-[](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/wx.png)
+![](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/wx.png)
