@@ -71,8 +71,7 @@ RxRetrofitApp.init(this);
 
 >[Rxjava+ReTrofit+okHttp深入浅出-终极封装变种](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master)
 
-##优化迭代
-根据反馈及时更新和优化的过程，如果在使用过程中有任何问题，欢迎反馈给我！
+
 
 ##思路
 详细思路可以可以参看我的博客：
