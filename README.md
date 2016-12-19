@@ -43,6 +43,9 @@ RxRetrofitApp.init(this);
 ```
 
 ##代码使用
+
+更多用法请参考demo
+
 ```java
     //    完美封装简化版
     private void simpleDo() {
