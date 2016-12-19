@@ -14,21 +14,8 @@
         9.文件上传下载(支持多文件，断点续传)
         10.Cache数据持久化和数据库（greenDao）两种缓存机制
 
-##添加相关引用
-```java
-    /*rx-android-java*/
-    compile 'io.reactivex:rxjava:+'
-    compile 'com.squareup.retrofit:adapter-rxjava:+'
-    compile 'com.trello:rxlifecycle:+'
-    compile 'com.trello:rxlifecycle-components:+'
-    /*rotrofit*/
-    compile 'com.squareup.retrofit2:retrofit:+'
-    compile 'com.squareup.retrofit2:converter-gson:+'
-    compile 'com.squareup.retrofit2:adapter-rxjava:+'
-    compile 'com.google.code.gson:gson:+'
-```
 
-##初始
+##依赖工程
 
 * 1.moudel导入工程
 
