@@ -75,21 +75,21 @@ RxRetrofitApp.init(this);
 * 通过单利获取一个httpmanger对象，触发请求
 * 结果统一通过BaseEntity中的fun1方法判断，最后返回传递的sub对象中
 
+##变种-推荐使用
+
+在之前的封装1-5中我们都是通过传统的GsonConverterFactory自动解析，这样做确实很方便，用户能直接获取返回的对象，不用关心具体的转换，但是：这随之而来有很多的缺陷（虽然官网推荐这样使用）；
+比如：无法使用其他第三发转换框架；泛型无法中间传递，封装无法统一处理缓存结果；回调信息无法统一处理..........
+所以我们在享受它遍历的同时也被迫的要限制做很多的处理，限制我们的扩展！
+介绍如何放弃GsonConverterFactory，直接返回String，扩展我们的封装！（封装的整体思想和之前的封装一样，所以不会有大的改动！）
+
+>[Rxjava+ReTrofit+okHttp深入浅出-终极封装变种](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master)
+
 ##优化迭代
 根据反馈及时更新和优化的过程，如果在使用过程中有任何问题，欢迎反馈给我！
 
 ##思路
 详细思路可以可以参看我的博客：
 [Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/column/details/13297.html)
-
-##变种
-在之前的封装1-5中我们都是通过传统的GsonConverterFactory自动解析，这样做确实很方便，用户能直接获取返回的对象，不用关心具体的转换，但是：这随之而来有很多的缺陷（虽然官网推荐这样使用）；
-比如：无法使用其他第三发转换框架；泛型无法中间传递，封装无法统一处理缓存结果；回调信息无法统一处理..........
-所以我们在享受它遍历的同时也被迫的要限制做很多的处理，限制我们的扩展！
-介绍如何放弃GsonConverterFactory，直接返回String，扩展我们的封装！（封装的整体思想和之前的封装一样，所以不会有大的改动！）
-[Rxjava+ReTrofit+okHttp深入浅出-终极封装变种](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master)
-
-
 
 
 
