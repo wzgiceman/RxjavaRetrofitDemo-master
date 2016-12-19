@@ -95,6 +95,4 @@ RxRetrofitApp.init(this);
 
 #                                     微信交流群
 
-![](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/gif/wxq.png)
-
-[**最近有幸被CSDN提名参加博客之星评选，希望你能投我一票!**](http://blog.csdn.net/vote/candidate.html?username=u014610664)
+![](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/wx.jpg)
