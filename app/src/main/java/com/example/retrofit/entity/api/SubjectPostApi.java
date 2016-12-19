@@ -1,10 +1,11 @@
 package com.example.retrofit.entity.api;
 
+import com.example.retrofit.HttpPostService;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpService;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
+import retrofit2.Retrofit;
 import rx.Observable;
 
 /**
@@ -48,7 +49,8 @@ public class SubjectPostApi extends BaseApi {
     }
 
     @Override
-    public Observable getObservable(HttpService methods) {
-        return methods.getAllVedioBys(isAll());
+    public Observable getObservable(Retrofit retrofit) {
+        HttpPostService service = retrofit.create(HttpPostService.class);
+        return service.getAllVedioBys(isAll());
     }
 }

@@ -59,11 +59,11 @@ public class HttpManager {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(basePar.getBaseUrl())
                 .build();
-        HttpService httpService = retrofit.create(HttpService.class);
+
 
         /*rx处理*/
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar);
-        Observable observable = basePar.getObservable(httpService)
+        Observable observable = basePar.getObservable(retrofit)
                 /*失败后的retry配置*/
                 .retryWhen(new RetryWhenNetworkException())
                 /*生命周期管理*/

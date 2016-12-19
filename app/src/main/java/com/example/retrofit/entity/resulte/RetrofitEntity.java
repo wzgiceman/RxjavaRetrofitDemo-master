@@ -1,4 +1,4 @@
-package com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte;
+package com.example.retrofit.entity.resulte;
 
 import java.util.List;
 

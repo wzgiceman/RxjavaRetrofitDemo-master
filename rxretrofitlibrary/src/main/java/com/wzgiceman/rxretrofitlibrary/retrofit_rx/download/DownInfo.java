@@ -1,6 +1,5 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.download;
 
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpService;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpDownOnNextListener;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -25,7 +24,7 @@ public class DownInfo{
     private long readLength;
     /*下载唯一的HttpService*/
     @Transient
-    private HttpService service;
+    private HttpDownService service;
     /*回调监听*/
     @Transient
     private HttpDownOnNextListener listener;
@@ -101,11 +100,11 @@ public class DownInfo{
         this.listener = listener;
     }
 
-    public HttpService getService() {
+    public HttpDownService getService() {
         return service;
     }
 
-    public void setService(HttpService service) {
+    public void setService(HttpDownService service) {
         this.service = service;
     }
 

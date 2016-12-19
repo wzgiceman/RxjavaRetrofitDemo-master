@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.example.retrofit.HttpPostService;
 import com.example.retrofit.R;
 import com.example.retrofit.entity.api.SubjectPostApi;
 import com.example.retrofit.entity.api.UploadApi;
@@ -16,11 +17,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.RetrofitEntity;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.SubjectResulte;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.resulte.UploadResulte;
+import com.example.retrofit.entity.resulte.RetrofitEntity;
+import com.example.retrofit.entity.resulte.SubjectResulte;
+import com.example.retrofit.entity.resulte.UploadResulte;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpService;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.ProgressRequestBody;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.UploadProgressListener;
@@ -183,7 +183,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 //        加载框
         final ProgressDialog pd = new ProgressDialog(this);
 
-        HttpService apiService = retrofit.create(HttpService.class);
+        HttpPostService apiService = retrofit.create(HttpPostService.class);
         Observable<RetrofitEntity> observable = apiService.getAllVedioBy(true);
         observable.subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

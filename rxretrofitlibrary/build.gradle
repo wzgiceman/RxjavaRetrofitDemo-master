@@ -22,16 +22,6 @@ android {
 }
 
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.greenrobot:greendao-gradle-plugin:+'
-    }
-}
-
-
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

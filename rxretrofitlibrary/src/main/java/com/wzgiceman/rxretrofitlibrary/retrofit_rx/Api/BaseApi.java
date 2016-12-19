@@ -1,12 +1,12 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api;
 
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpService;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 
 import java.lang.ref.SoftReference;
 
+import retrofit2.Retrofit;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -46,10 +46,10 @@ public abstract class BaseApi<T> implements Func1<BaseResultEntity<T>, T> {
     /**
      * 设置参数
      *
-     * @param methods
+     * @param retrofit
      * @return
      */
-    public abstract Observable getObservable(HttpService methods);
+    public abstract Observable getObservable(Retrofit retrofit);
 
 
 
