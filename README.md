@@ -71,7 +71,7 @@ RxRetrofitApp.init(this);
 
 >[Rxjava+ReTrofit+okHttp深入浅出-终极封装变种](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master)
 
->[极简方式使-无需任何学习成本](https://github.com/wzgiceman/Rx-Retrofit)
+>[Rxjava+ReTrofit+okHttp极简方式使用-无需任何学习成本](https://github.com/wzgiceman/Rx-Retrofit)
 
 ##思路
 详细思路可以可以参看我的博客：
