@@ -10,7 +10,7 @@ import com.example.retrofit.activity.adapter.DownAdapter;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownInfo;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbUtil;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class DownLaodActivity extends AppCompatActivity {
     List<DownInfo> listData;
-    DbUtil dbUtil;
+    DbDownUtil dbUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +31,7 @@ public class DownLaodActivity extends AppCompatActivity {
 
     /*数据*/
     private void initResource(){
-        dbUtil= DbUtil.getInstance();
+        dbUtil= DbDownUtil.getInstance();
         listData=dbUtil.queryDownAll();
         /*第一次模拟服务器返回数据掺入到数据库中*/
         if(listData.isEmpty()){

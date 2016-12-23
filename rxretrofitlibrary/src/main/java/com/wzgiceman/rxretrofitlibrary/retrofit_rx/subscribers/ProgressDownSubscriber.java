@@ -6,7 +6,7 @@ import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.Dow
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.HttpDownManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpDownOnNextListener;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbUtil;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 
 import java.lang.ref.SoftReference;
 
@@ -62,7 +62,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         }
         HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.FINISH);
-        DbUtil.getInstance().update(downInfo);
+        DbDownUtil.getInstance().update(downInfo);
     }
 
     /**
@@ -78,7 +78,7 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
         }
         HttpDownManager.getInstance().remove(downInfo);
         downInfo.setState(DownState.ERROR);
-        DbUtil.getInstance().update(downInfo);
+        DbDownUtil.getInstance().update(downInfo);
     }
 
     /**
