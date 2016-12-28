@@ -1,5 +1,6 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.http;
 
+import com.trello.rxlifecycle.android.ActivityEvent;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.RetryWhenNetworkException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.cookie.CookieInterceptor;
@@ -66,7 +67,8 @@ public class HttpManager {
                 /*失败后的retry配置*/
                 .retryWhen(new RetryWhenNetworkException())
                 /*生命周期管理*/
-                .compose(basePar.getRxAppCompatActivity().bindToLifecycle())
+//                .compose(basePar.getRxAppCompatActivity().bindToLifecycle())
+                .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.DESTROY))
                 /*http请求线程*/
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
