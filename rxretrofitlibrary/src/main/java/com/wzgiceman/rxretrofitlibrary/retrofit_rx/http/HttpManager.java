@@ -47,7 +47,9 @@ public class HttpManager {
         //手动创建一个OkHttpClient并设置超时时间缓存等设置
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(basePar.getConnectionTime(), TimeUnit.SECONDS);
-        builder.addInterceptor(new CookieInterceptor(basePar.isCache()));
+        if(basePar.isCache()){
+            builder.addInterceptor(new CookieInterceptor(basePar.isCache(),basePar.getUrl()));
+        }
 
         /*创建retrofit对象*/
         Retrofit retrofit = new Retrofit.Builder()

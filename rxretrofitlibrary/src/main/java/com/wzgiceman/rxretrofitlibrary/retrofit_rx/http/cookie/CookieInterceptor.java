@@ -21,9 +21,12 @@ public class CookieInterceptor implements Interceptor {
     private CookieDbUtil dbUtil;
     /*是否缓存标识*/
     private boolean cache;
+    /*url*/
+    private String url;
 
-    public CookieInterceptor( boolean cache) {
+    public CookieInterceptor(boolean cache, String url) {
         dbUtil=CookieDbUtil.getInstance();
+        this.url=url;
         this.cache=cache;
     }
 
@@ -42,7 +45,6 @@ public class CookieInterceptor implements Interceptor {
                 charset = contentType.charset(charset);
             }
             String bodyString = buffer.clone().readString(charset);
-            String url = request.url().toString();
             CookieResulte resulte= dbUtil.queryCookieBy(url);
             long time=System.currentTimeMillis();
             /*保存和更新本地数据*/
