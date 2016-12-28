@@ -40,7 +40,7 @@ public class DbDownUtil {
      */
     public static DbDownUtil getInstance() {
         if (db == null) {
-            synchronized (HttpDownManager.class) {
+            synchronized (DbDownUtil.class) {
                 if (db == null) {
                     db = new DbDownUtil();
                 }

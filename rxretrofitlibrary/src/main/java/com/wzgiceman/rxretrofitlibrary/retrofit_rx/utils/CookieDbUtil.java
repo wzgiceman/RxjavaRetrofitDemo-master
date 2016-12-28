@@ -40,7 +40,7 @@ public class CookieDbUtil {
      */
     public static CookieDbUtil getInstance() {
         if (db == null) {
-            synchronized (HttpDownManager.class) {
+            synchronized (CookieDbUtil.class) {
                 if (db == null) {
                     db = new CookieDbUtil();
                 }

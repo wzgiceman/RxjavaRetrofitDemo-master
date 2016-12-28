@@ -68,6 +68,9 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
                 pd.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
+                        if (mSubscriberOnNextListener.get() != null) {
+                            mSubscriberOnNextListener.get().onCancel();
+                        }
                         onCancelProgress();
                     }
                 });
