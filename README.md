@@ -1,4 +1,4 @@
-# Retrofit+Rxjava+okhttp基本操作和统一处理的demo
+# Retrofit+Rxjava+okhttp封装
 
 ![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/rxretrofit.gif)
 
