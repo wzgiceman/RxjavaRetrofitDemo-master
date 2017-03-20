@@ -27,9 +27,11 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 
 ### 统一的处理如何修改
 
-比如tokean过期这样的统一处理，可以将失败的处理逻辑放入到HttpManager中
+比如tokean过期这样的处理，可以将失败的统一处理逻辑放入到HttpManager中
+
 * 可以高效的统一封装，HttpManager中有网络请求的所有对象
-* 减少耦合度
+* 减少耦合度，方便修改
+
 
 
 
