@@ -1,6 +1,6 @@
-# Retrofit+Rxjava+okhttp基本操作和统一处理的demo
+# Retrofit+Rxjava+okhttp封装
 
-![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/retrofit_string.gif)
+![Preview](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master/blob/master/gif/rxretrofit.gif)
 
 
         1.Retrofit+Rxjava+okhttp基本使用方法
@@ -79,6 +79,6 @@ RxRetrofitApp.init(this);
 
 
 
-#                                     QQ交流群
+##                                     QQ交流群
 
 ![](https://github.com/wzgiceman/Rxbus/blob/master/gif/qq.png)
