@@ -3,9 +3,10 @@
 看之前先来个start支持下
 
 ### 项目地址
-Gson方案：https://github.com/wzgiceman/RxjavaRetrofitDemo-master
-String方案：https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master
-详细封装过程：http://blog.csdn.net/column/details/13297.html
+
+* Gson方案：https://github.com/wzgiceman/RxjavaRetrofitDemo-master
+* String方案：https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master
+* 详细封装过程：http://blog.csdn.net/column/details/13297.html
 
 Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返回null数据的问题
 但是个人还是推荐使用String方案，灵活
