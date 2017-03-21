@@ -4,8 +4,10 @@ import com.trello.rxlifecycle.android.ActivityEvent;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.RetryWhenNetworkException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.cookie.CookieInterceptor;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.subscribers.ProgressSubscriber;
 
+import java.lang.ref.SoftReference;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -76,6 +78,13 @@ public class HttpManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 /*结果判断*/
                 .map(basePar);
+
+
+        /*链接式对象返回*/
+        SoftReference<HttpOnNextListener> httpOnNextListener= basePar.getListener();
+        if(httpOnNextListener!=null&&httpOnNextListener.get()!=null){
+            httpOnNextListener.get().onNext(observable);
+        }
 
         /*数据回调*/
         observable.subscribe(subscriber);

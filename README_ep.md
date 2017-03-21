@@ -33,6 +33,9 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 * 减少耦合度，方便修改
 
 
+### 如何统一处理请求头（例如tokean过期之类的需求）
+
+可以进群，群文件分享中有此功能的解决demo，可以自行查看
 
 
 
