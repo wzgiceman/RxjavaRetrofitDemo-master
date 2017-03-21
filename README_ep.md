@@ -44,3 +44,11 @@ Retrofit基础使用google其实有很多，无非就是一些注解的使用，
 
 >http://blog.csdn.net/qq_24889075/article/details/52181133
 
+
+### Fragment中如何使用HttpManager
+
+可调用(RxAppCompatActivity)getContext()得到宿主RxAppCompatActivity
+
+```java
+ new HttpManager(this,(RxAppCompatActivity)getContext());
+```
