@@ -55,7 +55,7 @@ Retrofit基础使用google其实有很多，无非就是一些注解的使用，
 ```
 
 ### 如何在Service中调用
-service里面一般都是无生命周期的循环调用,可以copy一个manager出来，去掉RxAppCompatActivity参数就可以了,以及注释掉Ober对象中的
+service里面一般都是无生命周期的循环调用,可以copy一个HttpManager出来，去掉RxAppCompatActivity参数就可以了,以及注释掉Ober对象中的
 
 ```java
  xxx.compose(appCompatActivity.get().bindUntilEvent(ActivityEvent.DESTROY))
