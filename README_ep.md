@@ -1,6 +1,6 @@
 # 问题答疑
 
-看之前先来个start支持下
+看之前先来个start支持下,动动手指，其实我们能做的还有很多！
 
 ### 项目地址
 
@@ -18,8 +18,6 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 ### 缺少了DaoMaster，DaoSession，CookieResulteDao等类
 
 数据库处理类是greendao自动生成的，可以clean以后build如果还是失败，检查更目录下build.gradle是否添加greendao引用
-
-
 
 
 ### 为何把Api单独封装
