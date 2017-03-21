@@ -27,15 +27,11 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 
 ### 如何统一处理请求头（例如tokean过期之类的需求）
 
-比如tokean过期这样的处理，可以将失败的统一处理逻辑放入到HttpManager中
+比如tokean过期这样的处理，可以将失败的统一处理逻辑放入到RxJava的flatMap中处理
 
-* 可以高效的统一封装，HttpManager中有网络请求的所有对象
+* 可以进群，群文件分享中有此功能的解决demo，可以自行查看；不懂可以问群里的兄弟
 
-* 减少耦合度，方便修改
-
-* 可以进群，群文件分享中有此功能的解决demo，可以自行查看
-
-* github：https://github.com/wzgiceman/RxRetrofit-tokean
+* 自行下载研究github：https://github.com/wzgiceman/RxRetrofit-tokean
 
 
 ### 为何不用Okhttp或者Retrofit自带的缓存
