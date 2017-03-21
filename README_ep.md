@@ -35,8 +35,14 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 
 ### 如何统一处理请求头（例如tokean过期之类的需求）
 
-可以进群，群文件分享中有此功能的解决demo，可以自行查看
+* 可以进群，群文件分享中有此功能的解决demo，可以自行查看
 
+* github：https://github.com/wzgiceman/RxRetrofit-tokean
+
+
+### 为何不用Okhttp或者Retrofit只带的缓存
+
+只带缓存之适用于get请求，并且需要服务器配合返回time标识缓存时间，基本不适用实际开发中（服务器开发人员基本不鸟你这个）
 
 
 
