@@ -77,7 +77,9 @@ RxRetrofitApp.init(this);
 详细思路可以可以参看我的博客：
 [Rxjava+ReTrofit+okHttp深入浅出-终极封装](http://blog.csdn.net/column/details/13297.html)
 
+## 问题反馈列表集合
 
+[问题反馈列表集合-汇总解决](https://github.com/wzgiceman/RxjavaRetrofitDemo-master/blob/master/README_ep.md)
 
 ##                                     QQ交流群
 
