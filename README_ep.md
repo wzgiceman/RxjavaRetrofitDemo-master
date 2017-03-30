@@ -9,6 +9,10 @@
 * 详细封装过程：http://blog.csdn.net/column/details/13297.html
 
 
+### 混淆
+
+混淆规则：http://www.jianshu.com/p/c02049ed035d
+
 ### Gson方案null数据解析错误
 
 Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返回null数据的问题
