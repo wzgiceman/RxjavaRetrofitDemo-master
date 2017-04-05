@@ -70,7 +70,7 @@ public class HttpManager {
                 .retryWhen(new RetryWhenNetworkException())
                 /*生命周期管理*/
 //                .compose(basePar.getRxAppCompatActivity().bindToLifecycle())
-                .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.STOP))
                 /*http请求线程*/
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -88,5 +88,6 @@ public class HttpManager {
 
         /*数据回调*/
         observable.subscribe(subscriber);
+
     }
 }
