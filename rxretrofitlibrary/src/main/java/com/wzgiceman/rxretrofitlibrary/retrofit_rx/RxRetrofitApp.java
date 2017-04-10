@@ -14,6 +14,7 @@ public class RxRetrofitApp {
 
     public static void init(Application app){
         setApplication(app);
+        setDebug(true);
     }
 
     public static void init(Application app,boolean debug){
