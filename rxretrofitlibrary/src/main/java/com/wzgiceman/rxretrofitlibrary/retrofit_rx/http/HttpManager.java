@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.trello.rxlifecycle.android.ActivityEvent;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseApi;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.RxRetrofitApp;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.RetryWhenNetworkException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.cookie.CookieInterceptor;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
@@ -54,7 +55,9 @@ public class HttpManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(basePar.getConnectionTime(), TimeUnit.SECONDS);
         builder.addInterceptor(new CookieInterceptor(basePar.isCache(), basePar.getUrl()));
-        builder.addInterceptor(getHttpLoggingInterceptor());
+        if(RxRetrofitApp.isDebug()){
+            builder.addInterceptor(getHttpLoggingInterceptor());
+        }
 
 
         /*创建retrofit对象*/

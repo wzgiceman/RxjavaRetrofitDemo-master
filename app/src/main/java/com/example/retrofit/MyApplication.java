@@ -16,6 +16,6 @@ public class MyApplication extends Application{
     public void onCreate() {
         super.onCreate();
         app=getApplicationContext();
-        RxRetrofitApp.init(this);
+        RxRetrofitApp.init(this,BuildConfig.DEBUG);
     }
 }
