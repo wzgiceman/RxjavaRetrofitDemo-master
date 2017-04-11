@@ -72,8 +72,9 @@ public class HttpManager {
         /*rx处理*/
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar);
         Observable observable = basePar.getObservable(retrofit)
-                /*失败后的retry配置*/
-                .retryWhen(new RetryWhenNetworkException())
+                 /*失败后的retry配置*/
+                .retryWhen(new RetryWhenNetworkException(basePar.getRetryCount(),
+                        basePar.getRetryDelay(), basePar.getRetryIncreaseDelay()))
                 /*生命周期管理*/
 //                .compose(basePar.getRxAppCompatActivity().bindToLifecycle())
                 .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.STOP))
