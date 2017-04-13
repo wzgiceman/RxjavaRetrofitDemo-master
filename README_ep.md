@@ -29,6 +29,7 @@ Gson方案引入最新的`com.squareup.retrofit2:converter-gson`已经解决返�
 将api单独封装一个类是为了有利于代码的高聚，让api逻辑和主逻辑区分，减少逻辑嵌套的阅读理解成本。
 设想：如果100个接口，一种是写入到逻辑代码中（确实能相对减少部分代码量，但是你确定你自己能看懂？你的后任看了不会骂娘），还是写100个api类，分别写上注释更让人容易理解呢
 
+虽然如此，我也给出了解决方案，用法具体看源码：[RxRetrofit-String](https://github.com/wzgiceman/RxjavaRetrofitDemo-string-master)
 
 ### 如何统一处理请求头（例如tokean过期之类的需求）
 
