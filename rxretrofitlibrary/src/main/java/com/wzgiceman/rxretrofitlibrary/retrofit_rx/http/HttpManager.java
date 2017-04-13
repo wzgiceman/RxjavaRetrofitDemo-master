@@ -77,7 +77,7 @@ public class HttpManager {
                         basePar.getRetryDelay(), basePar.getRetryIncreaseDelay()))
                 /*生命周期管理*/
 //                .compose(basePar.getRxAppCompatActivity().bindToLifecycle())
-                .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.STOP))
+                .compose(basePar.getRxAppCompatActivity().bindUntilEvent(ActivityEvent.PAUSE))
                 /*http请求线程*/
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
