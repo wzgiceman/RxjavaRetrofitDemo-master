@@ -4,11 +4,15 @@ import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.Dow
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.RetryWhenNetworkException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.subscribers.ProgressDownSubscriber;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.AppUtil;
+import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,20 +35,21 @@ public class HttpDownManager {
     /*记录下载数据*/
     private Set<DownInfo> downInfos;
     /*回调sub队列*/
-    private HashMap<String,ProgressDownSubscriber> subMap;
+    private HashMap<String, ProgressDownSubscriber> subMap;
     /*单利对象*/
     private volatile static HttpDownManager INSTANCE;
     /*数据库类*/
     private DbDownUtil db;
 
-    private HttpDownManager(){
-        downInfos=new HashSet<>();
-        subMap=new HashMap<>();
-        db= DbDownUtil.getInstance();
+    private HttpDownManager() {
+        downInfos = new HashSet<>();
+        subMap = new HashMap<>();
+        db = DbDownUtil.getInstance();
     }
 
     /**
      * 获取单例
+     *
      * @return
      */
     public static HttpDownManager getInstance() {
@@ -62,21 +67,21 @@ public class HttpDownManager {
     /**
      * 开始下载
      */
-    public void startDown(final DownInfo info){
+    public void startDown(final DownInfo info) {
         /*正在下载不处理*/
-        if(info==null||subMap.get(info.getUrl())!=null){
+        if (info == null || subMap.get(info.getUrl()) != null) {
             subMap.get(info.getUrl()).setDownInfo(info);
             return;
         }
         /*添加回调处理类*/
-        ProgressDownSubscriber subscriber=new ProgressDownSubscriber(info);
+        ProgressDownSubscriber subscriber = new ProgressDownSubscriber(info);
         /*记录回调sub*/
-        subMap.put(info.getUrl(),subscriber);
+        subMap.put(info.getUrl(), subscriber);
         /*获取service，多次请求公用一个sercie*/
         HttpDownService httpService;
-        if(downInfos.contains(info)){
-            httpService=info.getService();
-        }else{
+        if (downInfos.contains(info)) {
+            httpService = info.getService();
+        } else {
             DownloadInterceptor interceptor = new DownloadInterceptor(subscriber);
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             //手动创建一个OkHttpClient并设置超时时间
@@ -89,12 +94,12 @@ public class HttpDownManager {
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .baseUrl(AppUtil.getBasUrl(info.getUrl()))
                     .build();
-            httpService= retrofit.create(HttpDownService.class);
+            httpService = retrofit.create(HttpDownService.class);
             info.setService(httpService);
             downInfos.add(info);
         }
         /*得到rx对象-上一次下載的位置開始下載*/
-        httpService.download("bytes=" + info.getReadLength() + "-",info.getUrl())
+        httpService.download("bytes=" + info.getReadLength() + "-", info.getUrl())
                 /*指定线程*/
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
@@ -104,12 +109,7 @@ public class HttpDownManager {
                 .map(new Func1<ResponseBody, DownInfo>() {
                     @Override
                     public DownInfo call(ResponseBody responseBody) {
-                        try {
-                            AppUtil.writeCache(responseBody,new File(info.getSavePath()),info);
-                        } catch (IOException e) {
-                            /*失败抛出异常*/
-                            throw new HttpTimeException(e.getMessage());
-                        }
+                        writeCaches(responseBody, new File(info.getSavePath()), info);
                         return info;
                     }
                 })
@@ -124,12 +124,12 @@ public class HttpDownManager {
     /**
      * 停止下载
      */
-    public void stopDown(DownInfo info){
-        if(info==null)return;
+    public void stopDown(DownInfo info) {
+        if (info == null) return;
         info.setState(DownState.STOP);
         info.getListener().onStop();
-        if(subMap.containsKey(info.getUrl())) {
-            ProgressDownSubscriber subscriber=subMap.get(info.getUrl());
+        if (subMap.containsKey(info.getUrl())) {
+            ProgressDownSubscriber subscriber = subMap.get(info.getUrl());
             subscriber.unsubscribe();
             subMap.remove(info.getUrl());
         }
@@ -140,14 +140,15 @@ public class HttpDownManager {
 
     /**
      * 暂停下载
+     *
      * @param info
      */
-    public void pause(DownInfo info){
-        if(info==null)return;
+    public void pause(DownInfo info) {
+        if (info == null) return;
         info.setState(DownState.PAUSE);
         info.getListener().onPuase();
-        if(subMap.containsKey(info.getUrl())){
-            ProgressDownSubscriber subscriber=subMap.get(info.getUrl());
+        if (subMap.containsKey(info.getUrl())) {
+            ProgressDownSubscriber subscriber = subMap.get(info.getUrl());
             subscriber.unsubscribe();
             subMap.remove(info.getUrl());
         }
@@ -158,7 +159,7 @@ public class HttpDownManager {
     /**
      * 停止全部下载
      */
-    public void stopAllDown(){
+    public void stopAllDown() {
         for (DownInfo downInfo : downInfos) {
             stopDown(downInfo);
         }
@@ -169,7 +170,7 @@ public class HttpDownManager {
     /**
      * 暂停全部下载
      */
-    public void pauseAll(){
+    public void pauseAll() {
         for (DownInfo downInfo : downInfos) {
             pause(downInfo);
         }
@@ -180,6 +181,7 @@ public class HttpDownManager {
 
     /**
      * 返回全部正在下载的数据
+     *
      * @return
      */
     public Set<DownInfo> getDownInfos() {
@@ -188,11 +190,59 @@ public class HttpDownManager {
 
     /**
      * 移除下载数据
+     *
      * @param info
      */
-    public void remove(DownInfo info){
+    public void remove(DownInfo info) {
         subMap.remove(info.getUrl());
         downInfos.remove(info);
+    }
+
+
+    /**
+     * 写入文件
+     *
+     * @param file
+     * @param info
+     * @throws IOException
+     */
+    public void writeCaches(ResponseBody responseBody, File file, DownInfo info) {
+        try {
+            RandomAccessFile randomAccessFile = null;
+            FileChannel channelOut = null;
+            InputStream inputStream = null;
+            try {
+                if (!file.getParentFile().exists())
+                    file.getParentFile().mkdirs();
+                long allLength = 0 == info.getCountLength() ? responseBody.contentLength() : info.getReadLength() + responseBody
+                        .contentLength();
+
+                inputStream = responseBody.byteStream();
+                randomAccessFile = new RandomAccessFile(file, "rwd");
+                channelOut = randomAccessFile.getChannel();
+                MappedByteBuffer mappedBuffer = channelOut.map(FileChannel.MapMode.READ_WRITE,
+                        info.getReadLength(), allLength - info.getReadLength());
+                byte[] buffer = new byte[1024 * 4];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    mappedBuffer.put(buffer, 0, len);
+                }
+            } catch (IOException e) {
+                throw new HttpTimeException(e.getMessage());
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (channelOut != null) {
+                    channelOut.close();
+                }
+                if (randomAccessFile != null) {
+                    randomAccessFile.close();
+                }
+            }
+        } catch (IOException e) {
+            throw new HttpTimeException(e.getMessage());
+        }
     }
 
 }
