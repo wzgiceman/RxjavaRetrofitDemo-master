@@ -13,13 +13,13 @@ import com.example.retrofit.HttpPostService;
 import com.example.retrofit.R;
 import com.example.retrofit.entity.api.SubjectPostApi;
 import com.example.retrofit.entity.api.UploadApi;
+import com.example.retrofit.entity.resulte.RetrofitEntity;
+import com.example.retrofit.entity.resulte.SubjectResulte;
+import com.example.retrofit.entity.resulte.UploadResulte;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.Api.BaseResultEntity;
-import com.example.retrofit.entity.resulte.RetrofitEntity;
-import com.example.retrofit.entity.resulte.SubjectResulte;
-import com.example.retrofit.entity.resulte.UploadResulte;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.http.HttpManager;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpOnNextListener;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.upload.ProgressRequestBody;
@@ -39,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener {
@@ -129,10 +130,18 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
       MultipartBody.Part part= MultipartBody.Part.createFormData("file_name", file.getName(), new ProgressRequestBody(requestBody,
               new UploadProgressListener() {
           @Override
-          public void onProgress(long currentBytesCount, long totalBytesCount) {
-              tvMsg.setText("提示:上传中");
-              progressBar.setMax((int) totalBytesCount);
-              progressBar.setProgress((int) currentBytesCount);
+          public void onProgress(final long currentBytesCount, final long totalBytesCount) {
+
+                /*回到主线程中，可通过timer等延迟或者循环避免快速刷新数据*/
+              Observable.just(currentBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
+
+                  @Override
+                  public void call(Long aLong) {
+                      tvMsg.setText("提示:上传中");
+                      progressBar.setMax((int) totalBytesCount);
+                      progressBar.setProgress((int) currentBytesCount);
+                  }
+              });
           }
       }));
       UploadApi uplaodApi = new UploadApi(httpOnNextListener,this);

@@ -9,9 +9,6 @@ import okio.BufferedSink;
 import okio.ForwardingSink;
 import okio.Okio;
 import okio.Sink;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * 自定义回调加载速度类RequestBody
@@ -19,75 +16,62 @@ import rx.functions.Action1;
  */
 
 public class ProgressRequestBody extends RequestBody {
-    //实际的待包装请求体
-    private final RequestBody requestBody;
+    //实际起作用的RequestBody
+    private RequestBody delegate;
     //进度回调接口
     private final UploadProgressListener progressListener;
-    //包装完成的BufferedSink
-    private BufferedSink bufferedSink;
+    private CountingSink countingSink;
 
     public ProgressRequestBody(RequestBody requestBody, UploadProgressListener progressListener) {
-        this.requestBody = requestBody;
+        this.delegate = requestBody;
         this.progressListener = progressListener;
     }
-    /**
-     * 重写调用实际的响应体的contentType
-     * @return MediaType
-     */
+
     @Override
     public MediaType contentType() {
-        return requestBody.contentType();
+        return delegate.contentType();
     }
-    /**
-     * 重写调用实际的响应体的contentLength
-     * @return contentLength
-     * @throws IOException 异常
-     */
-    @Override
-    public long contentLength() throws IOException {
-        return requestBody.contentLength();
-    }
-    /**
-     * 重写进行写入
-     * @param sink BufferedSink
-     * @throws IOException 异常
-     */
+
     @Override
     public void writeTo(BufferedSink sink) throws IOException {
-        if (null == bufferedSink) {
-            bufferedSink = Okio.buffer(sink(sink));
-        }
-        requestBody.writeTo(bufferedSink);
-        //必须调用flush，否则最后一部分数据可能不会被写入
+        countingSink = new CountingSink(sink);
+        //将CountingSink转化为BufferedSink供writeTo()使用
+        BufferedSink bufferedSink = Okio.buffer(countingSink);
+        delegate.writeTo(bufferedSink);
         bufferedSink.flush();
     }
+
+    protected final class CountingSink extends ForwardingSink{
+        private long byteWritten;
+        public CountingSink(Sink delegate) {
+            super(delegate);
+        }
+
+        /**
+         * 上传时调用该方法,在其中调用回调函数将上传进度暴露出去,该方法提供了缓冲区的自己大小
+         * @param source
+         * @param byteCount
+         * @throws IOException
+         */
+        @Override
+        public void write(Buffer source, long byteCount) throws IOException {
+            super.write(source, byteCount);
+            byteWritten += byteCount;
+            progressListener.onProgress(byteWritten, contentLength());
+        }
+    }
+
     /**
-     * 写入，回调进度接口
-     * @param sink Sink
-     * @return Sink
+     * 返回文件总的字节大小
+     * 如果文件大小获取失败则返回-1
+     * @return
      */
-    private Sink sink(Sink sink) {
-        return new ForwardingSink(sink) {
-            //当前写入字节数
-            long writtenBytesCount = 0L;
-            //总字节长度，避免多次调用contentLength()方法
-            long totalBytesCount = 0L;
-            @Override
-            public void write(Buffer source, long byteCount) throws IOException {
-                super.write(source, byteCount);
-                //增加当前写入的字节数
-                writtenBytesCount += byteCount;
-                //获得contentLength的值，后续不再调用
-                if (totalBytesCount == 0) {
-                    totalBytesCount = contentLength();
-                }
-                Observable.just(writtenBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
-                    @Override
-                    public void call(Long aLong) {
-                        progressListener.onProgress(writtenBytesCount, totalBytesCount);
-                    }
-                });
-            }
-        };
+    @Override
+    public long contentLength(){
+        try {
+            return delegate.contentLength();
+        } catch (IOException e) {
+            return -1;
+        }
     }
 }
