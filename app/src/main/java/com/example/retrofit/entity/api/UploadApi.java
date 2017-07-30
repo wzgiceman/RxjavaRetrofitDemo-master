@@ -24,7 +24,7 @@ public class UploadApi extends BaseApi {
     public UploadApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(true);
-        setMothed("AppFiftyToneGraph/videoLink");
+        setMethod("AppFiftyToneGraph/videoLink");
     }
 
     public MultipartBody.Part getPart() {
