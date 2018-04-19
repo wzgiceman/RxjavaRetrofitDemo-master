@@ -1,6 +1,8 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.subscribers;
 
 
+import android.os.Handler;
+
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownInfo;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.DownloadProgressListener;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
@@ -11,8 +13,6 @@ import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 import java.lang.ref.SoftReference;
 
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * 断点下载处理类Subscriber
@@ -26,11 +26,13 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
     private SoftReference<HttpDownOnNextListener> mSubscriberOnNextListener;
     /*下载数据*/
     private DownInfo downInfo;
+    private Handler handler;
 
 
-    public ProgressDownSubscriber(DownInfo downInfo) {
+    public ProgressDownSubscriber(DownInfo downInfo,Handler handler) {
         this.mSubscriberOnNextListener = new SoftReference<>(downInfo.getListener());
         this.downInfo=downInfo;
+        this.handler=handler;
     }
 
 
@@ -95,25 +97,23 @@ public class ProgressDownSubscriber<T> extends Subscriber<T> implements Download
 
     @Override
     public void update(long read, long count, boolean done) {
-        if(downInfo.getCountLength()>count){
-            read=downInfo.getCountLength()-count+read;
-        }else{
+        if (downInfo.getCountLength() > count) {
+            read = downInfo.getCountLength() - count + read;
+        } else {
             downInfo.setCountLength(count);
         }
         downInfo.setReadLength(read);
-        if (mSubscriberOnNextListener.get() != null) {
-            /*接受进度消息，造成UI阻塞，如果不需要显示进度可去掉实现逻辑，减少压力*/
-            rx.Observable.just(read).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<Long>() {
-                        @Override
-                        public void call(Long aLong) {
-                      /*如果暂停或者停止状态延迟，不需要继续发送回调，影响显示*/
-                            if(downInfo.getState()==DownState.PAUSE||downInfo.getState()==DownState.STOP)return;
-                            downInfo.setState(DownState.DOWN);
-                            mSubscriberOnNextListener.get().updateProgress(aLong,downInfo.getCountLength());
-                        }
-                    });
-        }
+
+        if (mSubscriberOnNextListener.get() == null || !downInfo.isUpdateProgress()) return;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                /*如果暂停或者停止状态延迟，不需要继续发送回调，影响显示*/
+                if (downInfo.getState() == DownState.PAUSE || downInfo.getState() == DownState.STOP) return;
+                downInfo.setState(DownState.DOWN);
+                mSubscriberOnNextListener.get().updateProgress(downInfo.getReadLength(), downInfo.getCountLength());
+            }
+        });
     }
 
 }

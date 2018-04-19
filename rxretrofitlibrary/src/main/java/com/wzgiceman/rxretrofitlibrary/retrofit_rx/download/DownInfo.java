@@ -4,8 +4,8 @@ import com.wzgiceman.rxretrofitlibrary.retrofit_rx.listener.HttpDownOnNextListen
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Transient;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * apk下载请求数据基础类
@@ -34,6 +34,9 @@ public class DownInfo{
     private int stateInte;
     /*url*/
     private String url;
+    /*是否需要实时更新下载进度,避免线程的多次切换*/
+    @Transient
+    private boolean updateProgress;
 
     public DownInfo(String url,HttpDownOnNextListener listener) {
         setUrl(url);
@@ -44,7 +47,7 @@ public class DownInfo{
         setUrl(url);
     }
 
-    @Generated(hash = 656702907)
+    @Keep
     public DownInfo(long id, String savePath, long countLength, long readLength,
             int connectonTime, int stateInte, String url) {
         this.id = id;
@@ -56,8 +59,11 @@ public class DownInfo{
         this.url = url;
     }
 
-    @Generated(hash = 928324469)
+    @Keep
     public DownInfo() {
+        readLength=0l;
+        countLength=0l;
+        stateInte=DownState.START.getState();
     }
 
 
@@ -77,6 +83,14 @@ public class DownInfo{
             default:
                 return DownState.FINISH;
         }
+    }
+
+    public boolean isUpdateProgress() {
+        return updateProgress;
+    }
+
+    public void setUpdateProgress(boolean updateProgress) {
+        this.updateProgress = updateProgress;
     }
 
     public void setState(DownState state) {

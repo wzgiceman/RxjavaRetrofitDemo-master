@@ -9,7 +9,6 @@ import com.example.retrofit.R;
 import com.example.retrofit.activity.adapter.DownAdapter;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownInfo;
-import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownState;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.utils.DbDownUtil;
 
 import java.io.File;
@@ -35,14 +34,14 @@ public class DownLaodActivity extends AppCompatActivity {
         listData=dbUtil.queryDownAll();
         /*第一次模拟服务器返回数据掺入到数据库中*/
         if(listData.isEmpty()){
-            String[] downUrl=new String[]{"http://www.izaodao.com/app/izaodao_app.apk",
+            String[] downUrl=new String[]{"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
                     "http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4"};
             for (int i = 0; i < downUrl.length; i++) {
                 File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                        "test"+i + ".apk");
+                        "test"+i + ".mp4");
                 DownInfo apkApi=new DownInfo(downUrl[i]);
                 apkApi.setId(i);
-                apkApi.setState(DownState.START);
+                apkApi.setUpdateProgress(true);
                 apkApi.setSavePath(outputFile.getAbsolutePath());
                 dbUtil.save(apkApi);
             }

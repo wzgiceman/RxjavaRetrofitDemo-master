@@ -2,8 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 14

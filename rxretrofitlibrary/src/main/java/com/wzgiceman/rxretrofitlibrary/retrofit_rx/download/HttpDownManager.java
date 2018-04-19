@@ -1,5 +1,7 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.download;
 
+import android.os.Handler;
+
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.DownloadInterceptor;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.RetryWhenNetworkException;
@@ -40,6 +42,8 @@ public class HttpDownManager {
     private volatile static HttpDownManager INSTANCE;
     /*数据库类*/
     private DbDownUtil db;
+    /*下载进度回掉主线程*/
+    private Handler handler;
 
     private HttpDownManager() {
         downInfos = new HashSet<>();
