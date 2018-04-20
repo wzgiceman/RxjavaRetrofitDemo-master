@@ -1,8 +1,11 @@
 package com.example.retrofit.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,8 +59,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         findViewById(R.id.btn_rx).setOnClickListener(this);
         findViewById(R.id.btn_rx_mu_down).setOnClickListener(this);
         findViewById(R.id.btn_rx_uploade).setOnClickListener(this);
-        img=(ImageView)findViewById(R.id.img);
-        progressBar=(NumberProgressBar)findViewById(R.id.number_progress_bar);
+        img = (ImageView) findViewById(R.id.img);
+        progressBar = (NumberProgressBar) findViewById(R.id.number_progress_bar);
+        verifyStoragePermissions(this);
     }
 
 
@@ -73,8 +77,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             case R.id.btn_rx_uploade:
                 uploadeDo();
                 break;
-            case  R.id.btn_rx_mu_down:
-                Intent intent=new Intent(this,DownLaodActivity.class);
+            case R.id.btn_rx_mu_down:
+                Intent intent = new Intent(this, DownLaodActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -84,7 +88,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     //    完美封装简化版
     private void simpleDo() {
-        SubjectPostApi postEntity = new SubjectPostApi(simpleOnNextListener,this);
+        SubjectPostApi postEntity = new SubjectPostApi(simpleOnNextListener, this);
         postEntity.setAll(true);
         HttpManager manager = HttpManager.getInstance();
         manager.doHttpDeal(postEntity);
@@ -100,10 +104,11 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         @Override
         public void onCacheNext(String cache) {
             /*缓存回调*/
-            Gson gson=new Gson();
-            java.lang.reflect.Type type = new TypeToken<BaseResultEntity<List<SubjectResulte>>>() {}.getType();
-            BaseResultEntity resultEntity= gson.fromJson(cache, type);
-            tvMsg.setText("缓存返回：\n"+resultEntity.getData().toString() );
+            Gson gson = new Gson();
+            java.lang.reflect.Type type = new TypeToken<BaseResultEntity<List<SubjectResulte>>>() {
+            }.getType();
+            BaseResultEntity resultEntity = gson.fromJson(cache, type);
+            tvMsg.setText("缓存返回：\n" + resultEntity.getData().toString());
         }
 
         /*用户主动调用，默认是不需要覆写该方法*/
@@ -124,37 +129,38 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     /*********************************************文件上传***************************************************/
 
-  private void uploadeDo(){
-      File file=new File("/storage/emulated/0/Download/11.jpg");
-      RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),file);
-      MultipartBody.Part part= MultipartBody.Part.createFormData("file_name", file.getName(), new ProgressRequestBody(requestBody,
-              new UploadProgressListener() {
-          @Override
-          public void onProgress(final long currentBytesCount, final long totalBytesCount) {
+    private void uploadeDo() {
+        File file = new File("/storage/emulated/0/Download/11.jpg");
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file_name", file.getName(), new ProgressRequestBody
+                (requestBody,
+                        new UploadProgressListener() {
+                            @Override
+                            public void onProgress(final long currentBytesCount, final long totalBytesCount) {
 
-                /*回到主线程中，可通过timer等延迟或者循环避免快速刷新数据*/
-              Observable.just(currentBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
+                                /*回到主线程中，可通过timer等延迟或者循环避免快速刷新数据*/
+                                Observable.just(currentBytesCount).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Long>() {
 
-                  @Override
-                  public void call(Long aLong) {
-                      tvMsg.setText("提示:上传中");
-                      progressBar.setMax((int) totalBytesCount);
-                      progressBar.setProgress((int) currentBytesCount);
-                  }
-              });
-          }
-      }));
-      UploadApi uplaodApi = new UploadApi(httpOnNextListener,this);
-      uplaodApi.setPart(part);
-      HttpManager manager = HttpManager.getInstance();
-      manager.doHttpDeal(uplaodApi);
-  }
+                                    @Override
+                                    public void call(Long aLong) {
+                                        tvMsg.setText("提示:上传中");
+                                        progressBar.setMax((int) totalBytesCount);
+                                        progressBar.setProgress((int) currentBytesCount);
+                                    }
+                                });
+                            }
+                        }));
+        UploadApi uplaodApi = new UploadApi(httpOnNextListener, this);
+        uplaodApi.setPart(part);
+        HttpManager manager = HttpManager.getInstance();
+        manager.doHttpDeal(uplaodApi);
+    }
 
 
     /**
      * 上传回调
      */
-    HttpOnNextListener httpOnNextListener=new HttpOnNextListener<UploadResulte>() {
+    HttpOnNextListener httpOnNextListener = new HttpOnNextListener<UploadResulte>() {
         @Override
         public void onNext(UploadResulte o) {
             tvMsg.setText("成功");
@@ -164,11 +170,10 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         @Override
         public void onError(Throwable e) {
             super.onError(e);
-            tvMsg.setText("失败："+e.toString());
+            tvMsg.setText("失败：" + e.toString());
         }
 
     };
-
 
 
     /**********************************************************正常不封装使用**********************************/
@@ -177,7 +182,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
      * Retrofit加入rxjava实现http请求
      */
     private void onButton9Click() {
-        String BASE_URL="http://www.izaodao.com/Api/";
+        String BASE_URL = "http://www.izaodao.com/Api/";
         //手动创建一个OkHttpClient并设置超时时间
         okhttp3.OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(5, TimeUnit.SECONDS);
@@ -227,6 +232,31 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
 
 
+    private final int REQUEST_EXTERNAL_STORAGE = 1;
+    private String[] PERMISSIONS_STORAGE = {
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+
+    /**
+     * 申请权限
+     *
+     * @param activity
+     */
+    public void verifyStoragePermissions(Activity activity) {
+
+        try {
+            //检测是否有写的权限
+            int permission = ActivityCompat.checkSelfPermission(activity,
+                    "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，会弹出对话框
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

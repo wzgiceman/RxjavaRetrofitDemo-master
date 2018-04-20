@@ -6,6 +6,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * apk下载请求数据基础类
@@ -63,6 +64,19 @@ public class DownInfo{
         readLength=0l;
         countLength=0l;
         stateInte=DownState.START.getState();
+    }
+
+    @Generated(hash = 1860227052)
+    public DownInfo(long id, String savePath, long countLength, long readLength,
+            int connectonTime, int stateInte, String url, boolean updateProgress) {
+        this.id = id;
+        this.savePath = savePath;
+        this.countLength = countLength;
+        this.readLength = readLength;
+        this.connectonTime = connectonTime;
+        this.stateInte = stateInte;
+        this.url = url;
+        this.updateProgress = updateProgress;
     }
 
     public DownState getState() {

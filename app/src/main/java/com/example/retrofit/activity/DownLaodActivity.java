@@ -20,6 +20,7 @@ import java.util.List;
 public class DownLaodActivity extends AppCompatActivity {
     List<DownInfo> listData;
     DbDownUtil dbUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,30 +30,28 @@ public class DownLaodActivity extends AppCompatActivity {
     }
 
     /*数据*/
-    private void initResource(){
-        dbUtil= DbDownUtil.getInstance();
-        listData=dbUtil.queryDownAll();
+    private void initResource() {
+        dbUtil = DbDownUtil.getInstance();
+        listData = dbUtil.queryDownAll();
         /*第一次模拟服务器返回数据掺入到数据库中*/
-        if(listData.isEmpty()){
-            String[] downUrl=new String[]{"http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
-                    "http://download.fir.im/v2/app/install/572eec6fe75e2d7a05000008?download_token=572bcb03dad2eed7c758670fd23b5ac4"};
-            for (int i = 0; i < downUrl.length; i++) {
+        if (listData.isEmpty()) {
+            for (int i = 0; i < 4; i++) {
                 File outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                        "test"+i + ".mp4");
-                DownInfo apkApi=new DownInfo(downUrl[i]);
+                        "test" + i + ".mp4");
+                DownInfo apkApi = new DownInfo("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4");
                 apkApi.setId(i);
                 apkApi.setUpdateProgress(true);
                 apkApi.setSavePath(outputFile.getAbsolutePath());
                 dbUtil.save(apkApi);
             }
-            listData=dbUtil.queryDownAll();
+            listData = dbUtil.queryDownAll();
         }
     }
 
     /*加载控件*/
-    private void initWidget(){
-        EasyRecyclerView recyclerView=(EasyRecyclerView)findViewById(R.id.rv);
-        DownAdapter adapter=new DownAdapter(this);
+    private void initWidget() {
+        EasyRecyclerView recyclerView = (EasyRecyclerView) findViewById(R.id.rv);
+        DownAdapter adapter = new DownAdapter(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         adapter.addAll(listData);
@@ -66,4 +65,5 @@ public class DownLaodActivity extends AppCompatActivity {
             dbUtil.update(downInfo);
         }
     }
+
 }
