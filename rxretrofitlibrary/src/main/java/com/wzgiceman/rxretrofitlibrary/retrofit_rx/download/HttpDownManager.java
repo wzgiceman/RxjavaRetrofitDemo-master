@@ -1,6 +1,7 @@
 package com.wzgiceman.rxretrofitlibrary.retrofit_rx.download;
 
 import android.os.Handler;
+import android.os.Looper;
 
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.download.DownLoadListener.DownloadInterceptor;
 import com.wzgiceman.rxretrofitlibrary.retrofit_rx.exception.HttpTimeException;
@@ -49,6 +50,7 @@ public class HttpDownManager {
         downInfos = new HashSet<>();
         subMap = new HashMap<>();
         db = DbDownUtil.getInstance();
+        handler=new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -78,7 +80,7 @@ public class HttpDownManager {
             return;
         }
         /*添加回调处理类*/
-        ProgressDownSubscriber subscriber = new ProgressDownSubscriber(info);
+        ProgressDownSubscriber subscriber = new ProgressDownSubscriber(info,handler);
         /*记录回调sub*/
         subMap.put(info.getUrl(), subscriber);
         /*获取service，多次请求公用一个sercie*/
