@@ -35,7 +35,6 @@ public class DownInfo{
     /*url*/
     private String url;
     /*是否需要实时更新下载进度,避免线程的多次切换*/
-    @Transient
     private boolean updateProgress;
 
     public DownInfo(String url,HttpDownOnNextListener listener) {
@@ -65,7 +64,6 @@ public class DownInfo{
         countLength=0l;
         stateInte=DownState.START.getState();
     }
-
 
     public DownState getState() {
         switch (getStateInte()){
@@ -170,5 +168,9 @@ public class DownInfo{
 
     public void setConnectonTime(int connectonTime) {
         this.connectonTime = connectonTime;
+    }
+
+    public boolean getUpdateProgress() {
+        return this.updateProgress;
     }
 }
